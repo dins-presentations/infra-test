@@ -1,0 +1,133 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>reveal.js</title>
+
+		<link rel="stylesheet" href="dist/reset.css">
+		<link rel="stylesheet" href="dist/reveal.css">
+		<link rel="stylesheet" href="dist/theme/league.css">
+		<link rel="stylesheet" href="node_modules/@fortawesome/fontawesome-free/css/all.css">
+
+		<!-- Theme used for syntax highlighted code -->
+		<link rel="stylesheet" href="plugin/highlight/monokai.css">
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+				<section data-auto-animate>
+					<h2 class="console-left">Как <br> Тестировать Инфраструктурный Код</h2>
+					<aside class="notes">
+					</aside>
+				</section>
+
+				<section class="console-left flex-container-column" data-auto-animate>
+					<h4 data-id="console">~&nbsp;<span class="soft-red">infra-test</span>&nbsp;describe&nbsp;<span class="underline">current-user</span></h4>
+					<div class="fragment console-output-left">12 лет в обеспечении качества</div>
+					<div class="fragment console-output-left">6 лет автоматизирую тестирование</div>
+					<div class="fragment console-output-left">5 лет в DINS</div>
+					<div class="fragment console-output-left">3 года строю CI/CD</div>
+					<div class="fragment console-output-left">2 года в Калифорнии</div>
+					<aside class="notes">
+					</aside>
+				</section>
+
+				<section class="console-left flex-container-column" data-auto-animate>
+					<h4 data-id="console">~&nbsp;<span class="soft-red">infra-test</span>&nbsp;describe&nbsp;<span class="underline">problem</span></h4>
+					<div class="fragment console-output-left" data-fragment-index="1">команда разработки</div>
+					<div class="console-output-left">
+						<span class="fragment" data-fragment-index="2">
+							<span class="fragment strike" data-fragment-index="4">хочет сама деплоить</span>
+						</span>
+						<span class="fragment" data-fragment-index="5">деплоит</span></div>
+					<div class="console-output-left"><span class="fragment" data-fragment-index="3">инфраструктуру</span></div>
+					<aside class="notes">
+					</aside>
+				</section>
+
+				<section class="console-left flex-container-column" data-auto-animate>
+					<h4 data-id="console">~&nbsp;<span class="soft-red">infra-test</span>&nbsp;describe&nbsp;<span class="underline">problem</span>&nbsp;--more</h4>
+					<div class="fragment console-output-left">облачные вычисления</div>
+					<div class="fragment console-output-left">инфраструктура как код</div>
+					<aside class="notes">
+					</aside>
+				</section>
+
+				<section class="console-left flex-container-column" data-auto-animate>
+					<h4 data-id="console">~&nbsp;<span class="soft-red">infra-test</span>&nbsp;describe&nbsp;<span class="spearmint">"облачные вычисления"</span></h4>
+					<div class="fragment console-output-left">как услуга:</div>
+					<div class="fragment console-output-left"><span class="spearmint">S</span>aaS - программное обеспечение</div>
+					<div class="fragment console-output-left"><span class="spearmint">P</span>aaS - платформа</div>
+					<div class="fragment console-output-left"><span class="spearmint">I</span>aaS - инфраструктура</div>
+					<aside class="notes">
+					</aside>
+				</section>
+
+				<section class="console-left flex-container-column" data-auto-animate>
+					<h4 data-id="console">~&nbsp;<span class="soft-red">infra-test</span>&nbsp;describe&nbsp;<span class="spearmint">"инфраструктура как код"</span></h4>
+					<div class="fragment console-output-left" style="display: flex; align-items: flex-end"><i class="fas fa-arrow-circle-up"></i>&nbsp;<span>скорость - автоматизируем рутину</span></div>
+					<div class="fragment console-output-left" style="display: flex; align-items: flex-end"><i class="fas fa-arrow-circle-down"></i>&nbsp;<span>цена - экономим время</span></div>
+					<div class="fragment console-output-left" style="display: flex; align-items: flex-end"><i class="fas fa-arrow-circle-down"></i>&nbsp;<span>риски -</span>&nbsp;<span style="text-decoration: line-through">человеческий фактор</span></div>
+					<aside class="notes">
+					</aside>
+				</section>
+
+				<section class="console-left flex-container-column" data-auto-animate>
+					<h4 data-id="console">~&nbsp;<span class="soft-red">infra-test</span>&nbsp;tools list</h4>
+					<div class="fragment console-output-left">&nbsp;&nbsp;(kitchen|rspec|ruby)-terraform</div>
+					<div class="fragment console-output-left">&nbsp;&nbsp;serverspec</div>
+					<div class="fragment console-output-left">&nbsp;&nbsp;goss</div>
+					<div class="fragment console-output-left">&nbsp;&nbsp;awsspec</div>
+					<div class="fragment console-output-left">&nbsp;&nbsp;terratest</div>
+					<aside class="notes">
+					</aside>
+				</section>
+
+				<section class="console-left flex-container-column" data-auto-animate>
+					<h4 data-id="console">~&nbsp;<span class="soft-red">infra-test</span>&nbsp;tools requirements</h4>
+					<div class="fragment console-output-left">docker</div>
+					<div class="fragment console-output-left">kubernetes</div>
+					<div class="fragment console-output-left">helm</div>
+					<div class="fragment console-output-left">aws</div>
+					<div class="fragment console-output-left">terraform</div>
+					<aside class="notes">
+					</aside>
+				</section>
+
+				<section class="console-left flex-container-column" data-auto-animate>
+					<h4 data-id="console">~&nbsp;<span class="soft-red">infra-test</span>&nbsp;tools select <span class="spearmint">"terratest"</span></h4>
+					<div class="fragment console-output-left" style="display: flex; align-items: flex-end"><a href="https://github.com/gruntwork-io/terratest" target="_blank" rel="noopener noreferrer">gruntwork-io/terratest</a>&nbsp;на&nbsp;<i class="fab fa-github"></i><span>&nbsp;c 2018 года</span></div>
+					<div class="fragment console-output-left">а еще нужно будет изучить Go</div>
+					<aside class="notes">
+					</aside>
+				</section>
+
+				<section class="console-left flex-container-column">
+					<aside class="notes">
+					</aside>
+				</section>
+
+			</div>
+		</div>
+
+		<script src="dist/reveal.js"></script>
+		<script src="plugin/notes/notes.js"></script>
+		<script src="plugin/markdown/markdown.js"></script>
+		<script src="plugin/highlight/highlight.js"></script>
+		<script>
+			// More info about initialization & config:
+			// - https://revealjs.com/initialization/
+			// - https://revealjs.com/config/
+			Reveal.initialize({
+				hash: true,
+				display: 'flex',
+				center: 'center',
+
+				// Learn about plugins: https://revealjs.com/plugins/
+				plugins: [ RevealMarkdown, RevealHighlight, RevealNotes ]
+			});
+		</script>
+	</body>
+</html>
