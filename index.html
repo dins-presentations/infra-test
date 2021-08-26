@@ -12,7 +12,7 @@
 		<link rel="stylesheet" href="node_modules/@fortawesome/fontawesome-free/css/all.css">
 
 		<!-- Theme used for syntax highlighted code -->
-		<link rel="stylesheet" href="plugin/highlight/monokai.css">
+		<link rel="stylesheet" href="plugin/highlight/code-highlight.css">
 	</head>
 	<body>
 		<div class="reveal">
@@ -48,7 +48,7 @@
 				</section>
 
 				<section class="console-left flex-container-column" data-auto-animate>
-					<h4 data-id="console">~&nbsp;<span class="soft-red">infra-test</span>&nbsp;describe&nbsp;<span class="underline">problem</span>&nbsp;--more</h4>
+					<h4 data-id="console">~&nbsp;<span class="soft-red">infra-test</span>&nbsp;describe&nbsp;<span class="underline">problem</span>&nbsp;</h4>
 					<div class="fragment console-output-left">облачные вычисления</div>
 					<div class="fragment console-output-left">инфраструктура как код</div>
 					<aside class="notes">
@@ -75,18 +75,7 @@
 				</section>
 
 				<section class="console-left flex-container-column" data-auto-animate>
-					<h4 data-id="console">~&nbsp;<span class="soft-red">infra-test</span>&nbsp;tools list</h4>
-					<div class="fragment console-output-left">&nbsp;&nbsp;(kitchen|rspec|ruby)-terraform</div>
-					<div class="fragment console-output-left">&nbsp;&nbsp;serverspec</div>
-					<div class="fragment console-output-left">&nbsp;&nbsp;goss</div>
-					<div class="fragment console-output-left">&nbsp;&nbsp;awsspec</div>
-					<div class="fragment console-output-left">&nbsp;&nbsp;terratest</div>
-					<aside class="notes">
-					</aside>
-				</section>
-
-				<section class="console-left flex-container-column" data-auto-animate>
-					<h4 data-id="console">~&nbsp;<span class="soft-red">infra-test</span>&nbsp;tools requirements</h4>
+					<h4 data-id="console">~&nbsp;<span class="soft-red">infra-test</span>&nbsp;list&nbsp;<span class="underline">requirements</span></h4>
 					<div class="fragment console-output-left">docker</div>
 					<div class="fragment console-output-left">kubernetes</div>
 					<div class="fragment console-output-left">helm</div>
@@ -97,9 +86,127 @@
 				</section>
 
 				<section class="console-left flex-container-column" data-auto-animate>
-					<h4 data-id="console">~&nbsp;<span class="soft-red">infra-test</span>&nbsp;tools select <span class="spearmint">"terratest"</span></h4>
+					<h4 data-id="console">~&nbsp;<span class="soft-red">infra-test</span>&nbsp;list&nbsp;<span class="underline">tools</span></h4>
+					<div class="fragment console-output-left">&nbsp;&nbsp;(kitchen|rspec|ruby)-terraform</div>
+					<div class="fragment console-output-left">&nbsp;&nbsp;serverspec</div>
+					<div class="fragment console-output-left">&nbsp;&nbsp;goss</div>
+					<div class="fragment console-output-left">&nbsp;&nbsp;awsspec</div>
+					<div class="fragment console-output-left">&nbsp;&nbsp;terratest</div>
+					<aside class="notes">
+					</aside>
+				</section>
+
+				<section class="console-left flex-container-column" data-auto-animate>
+					<h4 data-id="console">~&nbsp;<span class="soft-red">infra-test</span>&nbsp;select <span class="spearmint">"terratest"</span></h4>
 					<div class="fragment console-output-left" style="display: flex; align-items: flex-end"><a href="https://github.com/gruntwork-io/terratest" target="_blank" rel="noopener noreferrer">gruntwork-io/terratest</a>&nbsp;на&nbsp;<i class="fab fa-github"></i><span>&nbsp;c 2018 года</span></div>
 					<div class="fragment console-output-left">а еще нужно будет изучить Go</div>
+					<aside class="notes">
+					</aside>
+				</section>
+
+				<section class="console-left flex-container-column" data-auto-animate>
+					<h4 data-id="console">~&nbsp;<span class="soft-red">infra-test</span>&nbsp;test terraform</h4>
+					<div class="fragment " ><pre class="code-size"><code class="console" data-trim data-noescape>
+infra-test-example
+└ examples
+  └ hello-world</span>
+    <span class="hljs-string">└ main.tf</span>
+    └ outputs.tf
+    └ variables.tf
+└ modules
+└ test
+  <span class="hljs-string">└ hello_world_test.go</span>
+					</code></pre></div>
+					<aside class="notes">
+					</aside>
+				</section>
+
+				<section class="console-left flex-container-column" data-auto-animate>
+					<h4 data-id="console">~&nbsp;<span class="soft-red">infra-test</span>&nbsp;view main.tf</h4>
+					<div class="fragment " ><pre class="code-size"><code class="ruby" data-trim data-noescape>
+<span class="hljs-keyword" >resource</span> "aws_lambda_function" "hello_world" {
+  <span class="hljs-keyword" >function_name</span> = "HelloWorld"
+  <span class="hljs-keyword" >role</span> = aws_iam_role.lambda_exec.arn
+  # ...
+}
+
+<span class="hljs-keyword" >resource</span> "aws_iam_role" "lambda_exec" {
+  <span class="hljs-keyword" >name = "serverless_lambda"</span>
+  # ...
+}
+					</code></pre></div>
+					<aside class="notes">
+					</aside>
+				</section>
+
+				<section class="console-left flex-container-column" data-auto-animate>
+					<h4 data-id="console">~&nbsp;<span class="soft-red">infra-test</span>&nbsp;test terraform</h4>
+					<div class="fragment " ><pre class="code-size"><code class="console" data-trim data-noescape>
+$ terraform apply
+Outputs:
+url = abcdefghij.execute-api.us-east-1.amazonaws.com
+
+$ curl abcdefghij.execute-api.us-east-1.amazonaws.com
+Hello, World!
+					</code></pre></div>
+					<aside class="notes">
+					</aside>
+				</section>
+
+				<section class="console-left flex-container-column" data-auto-animate>
+					<h4 data-id="console">~&nbsp;<span class="soft-red">infra-test</span>&nbsp;view hello_world_test.go</h4>
+					<div class="fragment " ><pre class="code-size"><code class="golang" data-trim data-noescape data-line-numbers="1-8|2-4|6|7|5">
+func TestHelloWorld(t *testing.T) {
+  terraformOptions := &terraform.Options{
+    TerraformDir: "./examples/hello-world",
+  }
+  defer terraform.<span class="hljs-section">Destroy</span>(t, terraformOptions)
+  terraform.<span class="hljs-section">InitAndApply</span>(t, terraformOptions)
+  <span class="hljs-section">validate</span>(t, terraformOptions)
+}
+					</code></pre></div>
+					<aside class="notes">
+					</aside>
+				</section>
+
+				<section class="console-left flex-container-column" data-auto-animate>
+					<h4 data-id="console">~&nbsp;<span class="soft-red">infra-test</span>&nbsp;view hello_world_test.go</h4>
+					<div class="fragment " ><pre class="code-size"><code class="golang" data-trim data-noescape data-line-numbers="1-12|2|3-6|7-8|9-10">
+func validate(t *testing.T, opts *terraform.Options) {
+  url := terraform.<span class="hljs-section">Output</span>(t, opts, "url")
+  http_helper.<span class="hljs-section">HttpGetWithRetry</span>(
+    t, // testing.TestingT
+    url, // url
+    nil, // tlsConfig
+    200, // expectedStatus
+    "Hello, World!", // expectedBody
+    10, // retries
+    3 * time.Second // sleepBetweenRetries
+  )
+}
+					</code></pre></div>
+					<aside class="notes">
+					</aside>
+				</section>
+
+				<section class="console-left flex-container-column" data-auto-animate>
+					<h4 data-id="console">~&nbsp;<span class="soft-red">infra-test</span>&nbsp;view real-world</h4>
+					<div class="fragment " ><pre class="code-size"><code class="console" data-trim data-noescape>
+                                   ┌───┐
+                                   │<span class="hljs-keyword">AWS</span>│
+                                   ├───┼─────────────┐
+                                   │<span class="hljs-string">VPC</span>│   ┌───┬───┐ │
+       ┌───┐       ┌───┐           ├───┘   │<span class="hljs-string">EKS</span>│   │ │
+       │<span class="hljs-keyword">AWS</span>│       │<span class="hljs-keyword">AWS</span>│           │       ├───┘   │ │
+       ├───┴───┐   ├───┴───────┐   │ ┌───┐ │ ┌───┐ │ │
+    ──>│<span class="hljs-section">Route53</span>├──>│<span class="hljs-section">API Gateway</span>├───┼>│<span class="hljs-section">ALB</span>├─┼>│<span class="hljs-literal">APP</span>│ │ │
+       └───────┘   └───────────┘   │ └───┘ │ └─┬─┘ │ │
+                                   │       └───┼───┘ │
+                                   │ ┌───┐     │     │
+                                   │ │<span class="hljs-section">EDK</span>│<────┘     │
+                                   │ └───┘           │
+                                   └─────────────────┘
+					</code></pre></div>
 					<aside class="notes">
 					</aside>
 				</section>
