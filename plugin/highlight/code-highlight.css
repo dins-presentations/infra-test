@@ -149,6 +149,11 @@ code.hljs {
 .hljs-keyword {
     color: #EE64AC;
 }
+
+.hljs-keyword .hljs-built_in {
+    color: #EE64AC;
+}
+
 .hljs-emphasis {
     color: #EE64AC;
     font-style: italic;

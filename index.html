@@ -1,5 +1,5 @@
 <!doctype html>
-<html>
+<html xmlns="http://www.w3.org/1999/html">
 	<head>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -109,13 +109,13 @@
 					<div class="fragment " ><pre class="code-size"><code class="console" data-trim data-noescape>
 infra-test-example
 └ examples
-  └ hello-world</span>
+  └ hello-terraform
     <span class="hljs-string">└ main.tf</span>
     └ outputs.tf
     └ variables.tf
 └ modules
 └ test
-  <span class="hljs-string">└ hello_world_test.go</span>
+  <span class="hljs-string">└ hello_terraform_test.go</span>
 					</code></pre></div>
 					<aside class="notes">
 					</aside>
@@ -142,23 +142,24 @@ infra-test-example
 				<section class="console-left flex-container-column" data-auto-animate>
 					<h4 data-id="console">~&nbsp;<span class="soft-red">infra-test</span>&nbsp;test terraform</h4>
 					<div class="fragment " ><pre class="code-size"><code class="console" data-trim data-noescape>
-$ terraform apply
-Outputs:
-url = abcdefghij.execute-api.us-east-1.amazonaws.com
+$ <span class="hljs-keyword">cd</span> examples/hello-terraform
+$ <span class="hljs-keyword">terraform</span> apply
+<span class="hljs-string">Outputs:</span>
+<span class="hljs-string">url = abcdefghij.execute-api.us-east-1.amazonaws.com</span>
 
-$ curl abcdefghij.execute-api.us-east-1.amazonaws.com
-Hello, World!
+$ <span class="hljs-keyword">curl</span> abcdefghij.execute-api.us-east-1.amazonaws.com
+<span class="hljs-string">Hello, World!</span>
 					</code></pre></div>
 					<aside class="notes">
 					</aside>
 				</section>
 
 				<section class="console-left flex-container-column" data-auto-animate>
-					<h4 data-id="console">~&nbsp;<span class="soft-red">infra-test</span>&nbsp;view hello_world_test.go</h4>
+					<h4 data-id="console">~&nbsp;<span class="soft-red">infra-test</span>&nbsp;view hello_terraform_test.go</h4>
 					<div class="fragment " ><pre class="code-size"><code class="golang" data-trim data-noescape data-line-numbers="1-8|2-4|6|7|5">
-func TestHelloWorld(t *testing.T) {
+func TestTerraformHelloWorld(t *testing.T) {
   terraformOptions := &terraform.Options{
-    TerraformDir: "./examples/hello-world",
+    TerraformDir: "examples/hello-terraform",
   }
   defer terraform.<span class="hljs-section">Destroy</span>(t, terraformOptions)
   terraform.<span class="hljs-section">InitAndApply</span>(t, terraformOptions)
@@ -170,7 +171,7 @@ func TestHelloWorld(t *testing.T) {
 				</section>
 
 				<section class="console-left flex-container-column" data-auto-animate>
-					<h4 data-id="console">~&nbsp;<span class="soft-red">infra-test</span>&nbsp;view hello_world_test.go</h4>
+					<h4 data-id="console">~&nbsp;<span class="soft-red">infra-test</span>&nbsp;view hello_terraform_test.go</h4>
 					<div class="fragment " ><pre class="code-size"><code class="golang" data-trim data-noescape data-line-numbers="1-12|2|3-6|7-8|9-10">
 func validate(t *testing.T, opts *terraform.Options) {
   url := terraform.<span class="hljs-section">Output</span>(t, opts, "url")
@@ -190,23 +191,437 @@ func validate(t *testing.T, opts *terraform.Options) {
 				</section>
 
 				<section class="console-left flex-container-column" data-auto-animate>
-					<h4 data-id="console">~&nbsp;<span class="soft-red">infra-test</span>&nbsp;view real-world</h4>
+					<h4 data-id="console">~&nbsp;<span class="soft-red">infra-test</span>&nbsp;test kubernetes</h4>
 					<div class="fragment " ><pre class="code-size"><code class="console" data-trim data-noescape>
-                                   ┌───┐
-                                   │<span class="hljs-keyword">AWS</span>│
-                                   ├───┼─────────────┐
-                                   │<span class="hljs-string">VPC</span>│   ┌───┬───┐ │
-       ┌───┐       ┌───┐           ├───┘   │<span class="hljs-string">EKS</span>│   │ │
-       │<span class="hljs-keyword">AWS</span>│       │<span class="hljs-keyword">AWS</span>│           │       ├───┘   │ │
-       ├───┴───┐   ├───┴───────┐   │ ┌───┐ │ ┌───┐ │ │
-    ──>│<span class="hljs-section">Route53</span>├──>│<span class="hljs-section">API Gateway</span>├───┼>│<span class="hljs-section">ALB</span>├─┼>│<span class="hljs-literal">APP</span>│ │ │
-       └───────┘   └───────────┘   │ └───┘ │ └─┬─┘ │ │
-                                   │       └───┼───┘ │
-                                   │ ┌───┐     │     │
-                                   │ │<span class="hljs-section">EDK</span>│<────┘     │
-                                   │ └───┘           │
-                                   └─────────────────┘
+infra-test-example
+└ examples
+  ...
+  └ hello-k8s
+    <span class="hljs-string">└ Dockerfile</span>
+    <span class="hljs-string">└ deployment.yaml</span>
+└ modules
+└ test
+  ...
+  <span class="hljs-string">└ hello_k8s_test.go</span>
 					</code></pre></div>
+					<aside class="notes">
+					</aside>
+				</section>
+
+
+
+				<section class="console-left flex-container-column" data-auto-animate>
+					<h4 data-id="console">~&nbsp;<span class="soft-red">infra-test</span>&nbsp;view Dockerfile</h4>
+					<div class="fragment " ><pre class="code-size"><code class="dockerfile" data-trim data-noescape>
+FROM ubuntu:21.04
+EXPOSE 8080
+ARG DEBIAN_FRONTEND=noninteractive
+RUN apt-get update && apt-get install -y busybox
+RUN echo 'Hello, World!' > index.html
+CMD ["busybox", "httpd", "-f", "-p", "8080"]
+					</code></pre></div>
+					<aside class="notes">
+					</aside>
+				</section>
+
+				<section class="console-left flex-container-column" data-auto-animate>
+					<h4 data-id="console">~&nbsp;<span class="soft-red">infra-test</span>&nbsp;view deployment.yaml</h4>
+					<div class="fragment " ><pre class="code-size"><code class="yaml" data-trim data-noescape>
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hello-world
+spec:
+  selector:
+    matchLabels:
+      app: hello-world
+  replicas: 1
+  spec:
+    containers:
+    - name: hello-world # ...
+---
+apiVersion: v1
+kind: Service # ...
+					</code></pre></div>
+					<aside class="notes">
+					</aside>
+				</section>
+
+				<section class="console-left flex-container-column" data-auto-animate>
+					<h4 data-id="console">~&nbsp;<span class="soft-red">infra-test</span>&nbsp;describe deployment</h4>
+					<div class="fragment " ><pre class="code-size"><code class="console" data-trim data-noescape>
+
+&nbsp;        ┌───────────────────────────┐
+&nbsp;        │         <span class="hljs-string">Deployment</span>        │
+&nbsp;        └─────────────┬─────────────┘
+&nbsp;            ┌─────────┼─────────┐
+&nbsp;        ┌───┴───┐ ┌───┴───┐ ┌───┴───┐
+&nbsp;        │<span class="hljs-keyword">Replica</span>│ │<span class="hljs-keyword">Replica</span>│ │<span class="hljs-keyword">Replica</span>│
+&nbsp;        │  <span class="hljs-keyword">Set</span>  │ │  <span class="hljs-keyword">Set</span>  │ │  <span class="hljs-keyword">Set</span>  │
+&nbsp;        │     v1│ │     v2│ │     v3│
+&nbsp;        └───┬───┘ └───┬───┘ └───┬───┘
+&nbsp;           ┌┼┐       ┌┼┐       ┌┼┐
+&nbsp;         ┌─┴┴┤     ┌─┴┴┤     ┌─┴┴┤
+&nbsp;         │<span class="hljs-section">Pod</span>├┐    │<span class="hljs-section">Pod</span>├┐    │<span class="hljs-section">Pod</span>├┐
+&nbsp;         └┬──┘├┐   └┬──┘├┐   └┬──┘├┐
+&nbsp;          └┬──┘│    └┬──┘│    └┬──┘│
+&nbsp;           └───┘     └───┘     └───┘
+					</code></pre></div>
+					<aside class="notes">
+					</aside>
+			</section>
+
+				<section class="console-left flex-container-column" data-auto-animate>
+					<h4 data-id="console">~&nbsp;<span class="soft-red">infra-test</span>&nbsp;test kubernetes</h4>
+					<div class="fragment " ><pre class="code-size"><code class="console" data-trim data-noescape>
+$ <span class="hljs-keyword">cd</span> examples/hello-k8s
+$ <span class="hljs-keyword">docker</span> build -t infra-test/hello-world:latest .
+<span class="hljs-string">Successfully tagged infra-test/hello-world:latest</span>
+
+$ <span class="hljs-keyword">kubectl</span> apply -f .
+<span class="hljs-string">deployment.apps/hello-world created</span>
+<span class="hljs-string">service/hello-world created</span>
+
+$ <span class="hljs-keyword">curl</span> localhost:8080
+<span class="hljs-string">Hello, World!</span>
+					</code></pre></div>
+					<aside class="notes">
+					</aside>
+				</section>
+
+				<section class="console-left flex-container-column" data-auto-animate>
+					<h4 data-id="console">~&nbsp;<span class="soft-red">infra-test</span>&nbsp;view hello_k8s_test.go</h4>
+					<div class="fragment " ><pre class="code-size"><code class="golang" data-trim data-noescape data-line-numbers="1-10|2|4|5|7|9|6">
+func TestKubernetesHelloWorld(t *testing.T) {
+  <span class="hljs-section">buildDockerImage(t)</span>
+
+  kubeResourcePath := "examples/hello-k8s/deployment.yml"
+  options := k8s.<span class="hljs-section">NewKubectlOptions</span>("", "", "default")
+  defer k8s.<span class="hljs-section">KubectlDelete</span>(t, options, kubeResourcePath)
+  k8s.<span class="hljs-section">KubectlApply</span>(t, options, kubeResourcePath)
+
+  <span class="hljs-section">validate</span>(t, options)
+}
+					</code></pre></div>
+					<aside class="notes">
+					</aside>
+				</section>
+
+				<section class="console-left flex-container-column" data-auto-animate>
+					<h4 data-id="console">~&nbsp;<span class="soft-red">infra-test</span>&nbsp;view hello_k8s_test.go</h4>
+					<div class="fragment " ><pre class="code-size"><code class="golang" data-trim data-noescape>
+func buildDockerImage(t *testing.T) {
+  options := &docker.<span class="hljs-section">BuildOptions</span>{
+    Tags: []string{"infra-test/hello-world:latest"},
+  }
+  path := "examples/hello-k8s"
+  docker.<span class="hljs-section">Build</span>(t, path, options)
+}
+					</code></pre></div>
+					<aside class="notes">
+					</aside>
+				</section>
+
+				<section class="console-left flex-container-column" data-auto-animate>
+					<h4 data-id="console">~&nbsp;<span class="soft-red">infra-test</span>&nbsp;view hello_k8s_test.go</h4>
+					<div class="fragment " ><pre class="code-size"><code class="golang" data-trim data-noescape data-line-numbers="1-12|2-3|5-8|9-10|11-12">
+func validate(t *testing.T, opts *k8s.KubectlOptions) {
+  k8s.<span class="hljs-section">WaitUntilServiceAvailable</span>(t,
+    opts, "hello-world", 10, 1*time.Second)
+
+  http_helper.<span class="hljs-section">HttpGetWithRetry</span>(
+    t, // testing.TestingT
+    serviceUrl(t, opts), // url
+    nil, // tlsConfig
+    200, // expectedStatus
+    "Hello, World!", // expectedBody
+    10, // retries
+    3 * time.Second // sleepBetweenRetries
+  )
+}
+					</code></pre></div>
+					<aside class="notes">
+					</aside>
+				</section>
+
+				<section class="console-left flex-container-column" data-auto-animate>
+					<h4 data-id="console">~&nbsp;<span class="soft-red">infra-test</span>&nbsp;view hello_k8s_test.go</h4>
+					<div class="fragment " ><pre class="code-size"><code class="golang" data-trim data-noescape>
+func serviceUrl(t *testing.T, opts *k8s.KubectlOptions) string {
+  service := k8s.<span class="hljs-section">GetService</span>(t,
+    opts, "hello-world")
+
+  url := k8s.<span class="hljs-section">GetServiceEndpoint</span>(t, opts, service, 8080)
+  return fmt.Sprintf("http://%s", url)
+}
+					</code></pre></div>
+					<aside class="notes">
+					</aside>
+				</section>
+
+				<section class="console-left flex-container-column" data-auto-animate>
+					<h4 data-id="console">~&nbsp;<span class="soft-red">infra-test</span>&nbsp;test helm</h4>
+					<div class="fragment " ><pre class="code-size"><code class="console" data-trim data-noescape>
+infra-test-example
+└ examples
+  ...
+  └ hello-helm
+    └ templates
+      <span class="hljs-string">└ deployment.yaml</span>
+      <span class="hljs-string">└ service.yaml</span>
+      <span class="hljs-string">└ _helpers.tpl</span>
+    <span class="hljs-string">└ Chart.yaml</span>
+    <span class="hljs-string">└ values.yaml</span>
+└ modules
+└ test
+  ...
+  <span class="hljs-string">└ hello_helm_test.go</span>
+					</code></pre></div>
+					<aside class="notes">
+					</aside>
+				</section>
+
+				<section class="console-left flex-container-column" data-auto-animate>
+					<h4 data-id="console">~&nbsp;<span class="soft-red">infra-test</span>&nbsp;view Chart.yaml</h4>
+					<div class="fragment " ><pre class="code-size"><code class="yaml" data-trim data-noescape>
+apiVersion: v1
+name: hello_helm
+description: A minimal Helm chart
+version: 0.0.1
+					</code></pre></div>
+					<aside class="notes">
+					</aside>
+				</section>
+
+				<section class="console-left flex-container-column" data-auto-animate>
+					<h4 data-id="console">~&nbsp;<span class="soft-red">infra-test</span>&nbsp;view values.yaml</h4>
+					<div class="fragment " ><pre class="code-size"><code class="yaml" data-trim data-noescape>
+stage: pro
+image:
+  tag: latest
+					</code></pre></div>
+					<aside class="notes">
+					</aside>
+				</section>
+
+				<section class="console-left flex-container-column" data-auto-animate>
+					<h4 data-id="console">~&nbsp;<span class="soft-red">infra-test</span>&nbsp;view _helpers.tpl</h4>
+					<div class="fragment " ><pre class="code-size"><code class="go" data-trim data-noescape>
+{{- define "rc.replicas" -}}
+  {{- $stage := .Values.stage | lower -}}
+  {{- if (eq $stage "pro") -}}
+    {{- print 5 -}}
+  {{- else if (eq $stage "stage") -}}
+    {{- print 3 -}}
+  {{- else -}}
+    {{- print 1 -}}
+  {{- end -}}
+{{- end -}}
+					</code></pre></div>
+					<aside class="notes">
+					</aside>
+				</section>
+
+				<section class="console-left flex-container-column" data-auto-animate>
+					<h4 data-id="console">~&nbsp;<span class="soft-red">infra-test</span>&nbsp;view deployment.yaml</h4>
+					<div class="fragment " ><pre class="code-size"><code class="yaml" data-trim data-noescape>
+apiVersion: apps/v1
+kind: Deployment
+# ...
+spec:
+  replicas: {{ include "rc.replicas" }}
+# ...
+  template:
+# ...
+    spec:
+      containers:
+      - name: hello-world
+        image: infra-test/hello-world:{{ .Values.image.tag }}
+					</code></pre></div>
+					<aside class="notes">
+					</aside>
+				</section>
+
+				<section class="console-left flex-container-column" data-auto-animate>
+					<h4 data-id="console">~&nbsp;<span class="soft-red">infra-test</span>&nbsp;view hello_helm_test.go</h4>
+					<div class="fragment " ><pre class="code-size"><code class="golang" data-trim data-noescape data-line-numbers="1-22|2-8|4-5|10-14|16-17|19-22">
+func TestHelmHelloWorld(t *testing.T) {
+  options := &helm.<span class="hljs-section">Options</span>{
+  	SetValues: map[string]string{
+  		"stage": "stage",
+  		"image.tag": "v1",
+  	},
+  	KubectlOptions: k8s.<span class="hljs-section">NewKubectlOptions</span>("", "", "my-ns"),
+  }
+
+  output := helm.<span class="hljs-section">RenderTemplate</span>(t,
+     options,
+     "examples/hello-helm", // path to chart
+     "hello-helm", // release
+     []string{"templates/deployment.yaml"}) // show only
+
+  var deployment appsv1.<span class="hljs-section">Deployment</span>
+  helm.<span class="hljs-section">UnmarshalK8SYaml</span>(t, output, &deployment)
+
+  require.<span class="hljs-section">Equal</span>(t, deployment.<span class="hljs-section">Spec.Replicas</span>, 3)
+  require.<span class="hljs-section">Equal</span>(t,
+    deployment.<span class="hljs-section">Spec.Template.Spec.Containers[0].Image</span>,
+    "infra-test/hello-world:v1")
+}
+					</code></pre></div>
+					<aside class="notes">
+					</aside>
+				</section>
+
+				<section class="console-left flex-container-column" data-auto-animate>
+					<h4 data-id="console">~&nbsp;<span class="soft-red">infra-test</span>&nbsp;view real-world-terraform</h4>
+					<div class="fragment " ><pre class="code-size"><code class="console" data-trim data-noescape>
+&nbsp;                                   ┌───┐
+&nbsp;                                   │<span class="hljs-keyword">AWS</span>│
+&nbsp;                                   ├───┼─────────────┐
+&nbsp;                                   │<span class="hljs-string">VPC</span>│   ┌───┬───┐ │
+&nbsp;       ┌───┐       ┌───┐           ├───┘   │<span class="hljs-string">EKS</span>│   │ │
+&nbsp;       │<span class="hljs-keyword">AWS</span>│       │<span class="hljs-keyword">AWS</span>│           │       ├───┘   │ │
+&nbsp;       ├───┴───┐   ├───┴───────┐   │ ┌───┐ │ ┌───┐ │ │
+&nbsp;    ──>│<span class="hljs-section">Route53</span>├──>│<span class="hljs-section">API Gateway</span>├───┼>│<span class="hljs-section">ALB</span>├─┼>│<span class="hljs-literal">APP</span>│ │ │
+&nbsp;       └───────┘   └───────────┘   │ └───┘ │ └─┬─┘ │ │
+&nbsp;                                   │       └───┼───┘ │
+&nbsp;                                   │ ┌───┐     │     │
+&nbsp;                                   │ │<span class="hljs-section">EDK</span>│<────┘     │
+&nbsp;                                   │ └───┘           │
+&nbsp;                                   └─────────────────┘
+					</code></pre></div>
+					<aside class="notes">
+					</aside>
+				</section>
+
+				<section class="console-left flex-container-column" data-auto-animate>
+					<h4 data-id="console">~&nbsp;<span class="soft-red">infra-test</span>&nbsp;view real-world-k8s</h4>
+					<div class="fragment " ><pre class="code-size"><code class="console" data-trim data-noescape>
+&nbsp;                        ┌───────┐   ┌───────┐
+&nbsp;                        │<span class="hljs-literal">Ingress</span>├───┤<span class="hljs-literal">Service</span>│
+&nbsp;                        │    <span class="hljs-literal">BBB</span>│   │    <span class="hljs-literal">BBB</span>│
+&nbsp;                        └───────┘   └───┬───┘
+&nbsp;    ┌──────────┐   ┌──────────┐   ┌─────┴────┐   ┌──────────┐
+&nbsp;    │<span class="hljs-string">Autoscaler</span>├───┤<span class="hljs-string">Deployment</span>├───┤<span class="hljs-literal">Deployment</span>├───┤<span class="hljs-literal">Autoscaler</span>│
+&nbsp;    │       <span class="hljs-string">AAA</span>│   │       <span class="hljs-string">AAA</span>│   │       <span class="hljs-literal">BBB</span>│   │       <span class="hljs-literal">BBB</span>│
+&nbsp;    └─────┬────┘   └─────┬────┘   └─────┬────┘   └──────────┘
+&nbsp;     ┌────┴───┐      ┌───│──────────┬───┴─┐
+&nbsp;     │<span class="hljs-string">External</span>│      │   ├───────┐  │     │
+&nbsp;     │  <span class="hljs-string">Metric</span>│      │   │       │  │     │
+&nbsp;     └────────┘    ┌─┴───┴───┐ ┌─┴──┴─┐ ┌─┴───────┐
+&nbsp;                   │<span class="hljs-section">ConfigMap</span>│ │<span class="hljs-section">Secret</span>│ │<span class="hljs-literal">ConfigMap</span>│
+&nbsp;                   │   <span class="hljs-section">Common</span>│ │<span class="hljs-section">Common</span>│ │      <span class="hljs-literal">BBB</span>│
+&nbsp;                   └─────────┘ └──────┘ └─────────┘
+					</code></pre></div>
+					<aside class="notes">
+					</aside>
+				</section>
+
+				<section class="console-left flex-container-column" data-auto-animate>
+					<h4 data-id="console">~&nbsp;<span class="soft-red">infra-test</span>&nbsp;view real-world-helm</h4>
+					<div class="fragment " ><pre class="code-size"><code class="go" data-trim data-noescape data-line-numbers="1-27|2-3|8|20|24">
+{{- define "rc.deployment.spec.replicas" -}}
+  {{- $instance := (required "A valid instance is required!" .Values.instance) | lower -}}
+  {{- if eq $instance "aaa-pro" -}}{{- $instance = "aaapro" -}}{{- end -}}
+  {{- $r := "" -}}
+  {{- $useDefault := false -}}
+  {{- $hasDefaultKey := false -}}
+  {{- if hasKey .Values.profiles $instance -}}
+    {{- if or (not (hasKey (get .Values.profiles $instance) "replicas")) (empty ( toString (get (get .Values.profiles $instance) "replicas"))) -}}
+      {{- $useDefault = true -}}
+    {{- end -}}
+  {{- else -}}
+    {{- $useDefault = true -}}
+  {{- end -}}
+  {{- if not (empty .Values.profiles.default) -}}
+    {{- if (hasKey .Values.profiles.default "replicas") -}}
+      {{- $hasDefaultKey = true -}}
+    {{- end -}}
+  {{- end -}}
+  {{- if and $useDefault $hasDefaultKey -}}
+    {{- $r = .Values.profiles.default.replicas | toString | atoi -}}
+  {{- else if and (not $useDefault) (hasKey .Values.profiles $instance) -}}
+    {{- $r = (get (get .Values.profiles $instance) "replicas") | toString | atoi -}}
+  {{- else -}}
+      {{- fail (printf "profiles.%s.replicas or profiles.default.replicas required" $instance) -}}
+  {{- end -}}
+  replicas: {{ $r }}
+{{- end -}}
+					</code></pre></div>
+					<aside class="notes">
+					</aside>
+				</section>
+
+				<section class="console-left flex-container-column" data-auto-animate>
+					<h4 data-id="console">~&nbsp;<span class="soft-red">infra-test</span>&nbsp;solve&nbsp;<span class="underline">problem</span></h4>
+					<div class="console-output-left"><span class="fragment">нет времени/желания тестировать?</span></div>
+					<div class="console-output-left"><span class="fragment">используй статический анализ!</span></div>
+					<aside class="notes">
+					</aside>
+				</section>
+
+				<section class="console-left flex-container-column" data-auto-animate>
+					<h4 data-id="console">~&nbsp;<span class="soft-red">infra-test</span>&nbsp;describe&nbsp;<span class="spearmint">"статический анализ"</span></h4>
+					<div class="console-output-left"><span class="fragment">используй встроенные средства</span></div>
+					<div class="fragment " ><pre class="code-size"><code class="console" data-trim data-noescape>
+$ <span class="hljs-keyword">terraform</span> validate
+
+$ <span class="hljs-keyword">helm</span> template
+
+$ <span class="hljs-keyword">kubectl</span> -f . --dry-run --validate=true
+					</code></pre></div>
+					<aside class="notes">
+					</aside>
+				</section>
+
+				<section class="console-left flex-container-column" data-auto-animate>
+					<h4 data-id="console">~&nbsp;<span class="soft-red">infra-test</span>&nbsp;describe&nbsp;<span class="spearmint">"статический анализ"</span></h4>
+					<div class="console-output-left"><span class="fragment">используй lint</span></div>
+					<div class="fragment " ><pre class="code-size"><code class="console" data-trim data-noescape>
+$ <span class="hljs-keyword">tflint</span>
+
+$ <span class="hljs-keyword">hadolint</span>
+
+$ <span class="hljs-keyword">helm</span> lint
+
+$ <span class="hljs-keyword">kube-lint</span>
+
+$ <span class="hljs-keyword">yamllint</span>
+					</code></pre></div>
+					<aside class="notes">
+					</aside>
+				</section>
+
+				<section class="console-left flex-container-column" data-auto-animate>
+					<h4 data-id="console">~&nbsp;<span class="soft-red">infra-test</span>&nbsp;describe&nbsp;<span class="spearmint">"статический анализ"</span></h4>
+					<div class="console-output-left"><span class="fragment">используй dry-run</span></div>
+					<div class="fragment " ><pre class="code-size"><code class="console" data-trim data-noescape>
+$ <span class="hljs-keyword">terraform</span> plan
+
+$ <span class="hljs-keyword">helm</span> install --dry-run
+
+$ <span class="hljs-keyword">kubectl</span> apply -f <file> --server-dry-run
+					</code></pre></div>
+					<aside class="notes">
+					</aside>
+				</section>
+
+				<section class="console-left flex-container-column" data-auto-animate>
+					<h4 data-id="console">~&nbsp;<span class="soft-red">infra-test</span>&nbsp;solve&nbsp;<span class="underline">problem</span></h4>
+					<div class="console-output-left"><span class="fragment">есть временя/желание тестировать?</span></div>
+					<div class="console-output-left"><span class="fragment">пропускай модульное тестирование,</span></div>
+					<div class="console-output-left"><span class="fragment">оно "бесполезно"!</span></div>
+					<div class="console-output-left"><span class="fragment">делай интеграционные тесты!</span></div>
+					<aside class="notes">
+					</aside>
+				</section>
+
+				<section class="console-left flex-container-column" data-auto-animate>
+					<h4 data-id="console">~&nbsp;<span class="soft-red">infra-test</span>&nbsp;solve&nbsp;<span class="underline">problem</span></h4>
+					<div class="console-output-left"><span class="fragment">есть много времени/желания тестировать?</span></div>
+					<div class="console-output-left"><span class="fragment">переходи от интеграционного</span></div>
+					<div class="console-output-left"><span class="fragment">к end-2-end тестированию!</span></div>
 					<aside class="notes">
 					</aside>
 				</section>
