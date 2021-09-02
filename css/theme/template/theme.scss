@@ -349,9 +349,19 @@
 	flex-direction: column;
 }
 
+.flex-container-column {
+	display: flex;
+	flex-direction: column;
+}
+
 .soft-red {
 	color: #FFA4A0;
 }
+
+.hard-red {
+	color: #E95678;
+}
+
 
 .spearmint {
 	color: #23C478;

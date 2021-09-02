@@ -376,9 +376,18 @@ section.has-light-background, section.has-light-background h1, section.has-light
   padding-left:10%;
 }
 
+.console-output-right {
+  text-align: left;
+  padding-right:10%;
+}
+
 .flex-container-column {
   display: flex;
   flex-direction: column;
+}
+
+.hard-red {
+  color: #E95678;
 }
 
 .soft-red {

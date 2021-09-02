@@ -75,12 +75,84 @@
 				</section>
 
 				<section class="console-left flex-container-column" data-auto-animate>
+					<h4 data-id="console">~&nbsp;<span class="soft-red">infra-test</span>&nbsp;answer&nbsp;<span class="spearmint">"почему я?"</span></h4>
+					<div class="fragment console-output-left">чтобы</div>
+					<div class="fragment console-output-left">применить лучшие практики</div>
+					<div class="fragment console-output-left">обеспечить инфраструктуру тестирования</div>
+					<div class="fragment console-output-left">и не бояться делать изменения</div>
+					<aside class="notes">
+					</aside>
+				</section>
+
+				<section class="console-left flex-container-column" data-auto-animate>
 					<h4 data-id="console">~&nbsp;<span class="soft-red">infra-test</span>&nbsp;list&nbsp;<span class="underline">requirements</span></h4>
 					<div class="fragment console-output-left">docker</div>
 					<div class="fragment console-output-left">kubernetes</div>
 					<div class="fragment console-output-left">helm</div>
 					<div class="fragment console-output-left">aws</div>
 					<div class="fragment console-output-left">terraform</div>
+					<aside class="notes">
+					</aside>
+				</section>
+
+				<section class="console-left flex-container-column" data-auto-animate>
+					<h4 data-id="console">~&nbsp;<span class="soft-red">infra-test</span>&nbsp;solve&nbsp;<span class="underline">problem</span> --dry-run</h4>
+					<div class="console-output-left"><span class="fragment">нет времени/желания тестировать?</span></div>
+					<div class="console-output-left"><span class="fragment">статический анализ!</span></div>
+					<aside class="notes">
+					</aside>
+				</section>
+
+				<section class="console-left flex-container-column" data-auto-animate>
+					<h4 data-id="console">~&nbsp;<span class="soft-red">infra-test</span>&nbsp;describe&nbsp;<span class="spearmint">"статический анализ"</span></h4>
+					<div class="console-output-left"><span class="fragment">встроенные средства</span></div>
+					<div class="fragment " ><pre class="code-size"><code class="console" data-trim data-noescape>
+$ <span class="hljs-keyword">terraform</span> validate
+
+$ <span class="hljs-keyword">helm</span> template
+
+$ <span class="hljs-keyword">kubectl</span> -f . --dry-run --validate=true
+					</code></pre></div>
+					<aside class="notes">
+					</aside>
+				</section>
+
+				<section class="console-left flex-container-column" data-auto-animate>
+					<h4 data-id="console">~&nbsp;<span class="soft-red">infra-test</span>&nbsp;describe&nbsp;<span class="spearmint">"статический анализ"</span></h4>
+					<div class="console-output-left"><span class="fragment">lint</span></div>
+					<div class="fragment " ><pre class="code-size"><code class="console" data-trim data-noescape>
+$ <span class="hljs-keyword">tflint</span>
+
+$ <span class="hljs-keyword">hadolint</span>
+
+$ <span class="hljs-keyword">helm</span> lint
+
+$ <span class="hljs-keyword">kube-lint</span>
+
+$ <span class="hljs-keyword">yamllint</span>
+					</code></pre></div>
+					<aside class="notes">
+					</aside>
+				</section>
+
+				<section class="console-left flex-container-column" data-auto-animate>
+					<h4 data-id="console">~&nbsp;<span class="soft-red">infra-test</span>&nbsp;describe&nbsp;<span class="spearmint">"статический анализ"</span></h4>
+					<div class="console-output-left"><span class="fragment">dry-run</span></div>
+					<div class="fragment " ><pre class="code-size"><code class="console" data-trim data-noescape>
+$ <span class="hljs-keyword">terraform</span> plan
+
+$ <span class="hljs-keyword">helm</span> install --dry-run
+
+$ <span class="hljs-keyword">kubectl</span> apply -f FILENAME --server-dry-run
+					</code></pre></div>
+					<aside class="notes">
+					</aside>
+				</section>
+
+				<section class="console-left flex-container-column" data-auto-animate>
+					<h4 data-id="console">~&nbsp;<span class="soft-red">infra-test</span>&nbsp;solve&nbsp;<span class="underline">problem</span></h4>
+					<div class="console-output-left"><span class="fragment">есть временя/желание тестировать?</span></div>
+					<div class="console-output-left"><span class="fragment">выбираем инструмент!</span></div>
 					<aside class="notes">
 					</aside>
 				</section>
@@ -100,6 +172,41 @@
 					<h4 data-id="console">~&nbsp;<span class="soft-red">infra-test</span>&nbsp;select <span class="spearmint">"terratest"</span></h4>
 					<div class="fragment console-output-left" style="display: flex; align-items: flex-end"><a href="https://github.com/gruntwork-io/terratest" target="_blank" rel="noopener noreferrer">gruntwork-io/terratest</a>&nbsp;на&nbsp;<i class="fab fa-github"></i><span>&nbsp;c 2018 года</span></div>
 					<div class="fragment console-output-left">а еще нужно будет изучить Go</div>
+					<aside class="notes">
+					</aside>
+				</section>
+
+				<section style="justify-content: center">
+					<img data-src="img/golang.png">
+					<aside class="notes">
+					</aside>
+				</section>
+
+				<section class="console-left flex-container-column" data-auto-animate>
+					<h4 data-id="console">~&nbsp;<span class="soft-red">infra-test</span>&nbsp;compare java go</h4>
+					<div class="console-output-right" style="display: flex; justify-content: space-evenly; flex-direction: row; flex-wrap: nowrap">
+						<div style="display: flex; flex-direction: column; align-items: flex-start;">
+							<div class="fragment" data-fragment-index="1">&nbsp;</div>
+							<div class="fragment" data-fragment-index="2">OOP</div>
+							<div class="fragment" data-fragment-index="5">DI</div>
+							<div class="fragment" data-fragment-index="8">Generics</div>
+							<div class="fragment" data-fragment-index="11">Exceptions</div>
+						</div>
+						<div style="display: flex; flex-direction: column; align-items: center;">
+							<div class="fragment" data-fragment-index="1">Java</div>
+							<div class="fragment hard-red" data-fragment-index="3">yes</div>
+							<div class="fragment hard-red" data-fragment-index="6">yes</div>
+							<div class="fragment hard-red" data-fragment-index="9">yes</div>
+							<div class="fragment hard-red" data-fragment-index="12">yes</div>
+						</div>
+						<div style="display: flex; flex-direction: column; align-items: center;">
+							<div class="fragment" data-fragment-index="1">Go</div>
+							<div class="fragment" data-fragment-index="4"><span class="spearmint">no</span>/<span class="hard-red">yes</span></div>
+							<div class="fragment" data-fragment-index="7"><span class="spearmint">no</span>/<span class="hard-red">yes</span></div>
+							<div class="fragment" data-fragment-index="10"><span class="spearmint">no</span></div>
+							<div class="fragment" data-fragment-index="13"><span class="spearmint">no</span></div>
+						</div>
+					</div>
 					<aside class="notes">
 					</aside>
 				</section>
@@ -331,7 +438,7 @@ func validate(t *testing.T, opts *k8s.KubectlOptions) {
 
   http_helper.<span class="hljs-section">HttpGetWithRetry</span>(
     t, // testing.TestingT
-    serviceUrl(t, opts), // url
+    <span class="hljs-section">serviceUrl</span>(t, opts), // url
     nil, // tlsConfig
     200, // expectedStatus
     "Hello, World!", // expectedBody
@@ -398,7 +505,7 @@ version: 0.0.1
 					<div class="fragment " ><pre class="code-size"><code class="yaml" data-trim data-noescape>
 stage: pro
 image:
-  tag: latest
+  version: latest
 					</code></pre></div>
 					<aside class="notes">
 					</aside>
@@ -436,7 +543,7 @@ spec:
     spec:
       containers:
       - name: hello-world
-        image: infra-test/hello-world:{{ .Values.image.tag }}
+        image: infra-test/hello-world:{{ .Values.image.version }}
 					</code></pre></div>
 					<aside class="notes">
 					</aside>
@@ -449,7 +556,7 @@ func TestHelmHelloWorld(t *testing.T) {
   options := &helm.<span class="hljs-section">Options</span>{
   	SetValues: map[string]string{
   		"stage": "stage",
-  		"image.tag": "v1",
+  		"image.version": "v1",
   	},
   	KubectlOptions: k8s.<span class="hljs-section">NewKubectlOptions</span>("", "", "my-ns"),
   }
@@ -468,7 +575,17 @@ func TestHelmHelloWorld(t *testing.T) {
     deployment.<span class="hljs-section">Spec.Template.Spec.Containers[0].Image</span>,
     "infra-test/hello-world:v1")
 }
+
 					</code></pre></div>
+					<aside class="notes">
+					</aside>
+				</section>
+
+				<section class="console-left flex-container-column" data-auto-animate>
+					<h4 data-id="console">~&nbsp;<span class="soft-red">infra-test</span>&nbsp;solve&nbsp;<span class="underline">problem</span></h4>
+					<div class="console-output-left"><span class="fragment">модульные тесты</span></div>
+					<div class="console-output-left"><span class="fragment">работают в независимых аккаунтах</span></div>
+					<div class="console-output-left"><span class="fragment">и требуют регулярной чистки</span></div>
 					<aside class="notes">
 					</aside>
 				</section>
@@ -520,7 +637,8 @@ func TestHelmHelloWorld(t *testing.T) {
 
 				<section class="console-left flex-container-column" data-auto-animate>
 					<h4 data-id="console">~&nbsp;<span class="soft-red">infra-test</span>&nbsp;view real-world-helm</h4>
-					<div class="fragment " ><pre class="code-size"><code class="go" data-trim data-noescape data-line-numbers="1-27|2-3|8|20|24">
+					<div class="fragment console-output-left" data-fragment-index="1">не пытайтесь понять этот код</div>
+					<div class="fragment" data-fragment-index="1"><pre class="code-size"><code class="go" data-trim data-noescape>
 {{- define "rc.deployment.spec.replicas" -}}
   {{- $instance := (required "A valid instance is required!" .Values.instance) | lower -}}
   {{- if eq $instance "aaa-pro" -}}{{- $instance = "aaapro" -}}{{- end -}}
@@ -555,79 +673,47 @@ func TestHelmHelloWorld(t *testing.T) {
 
 				<section class="console-left flex-container-column" data-auto-animate>
 					<h4 data-id="console">~&nbsp;<span class="soft-red">infra-test</span>&nbsp;solve&nbsp;<span class="underline">problem</span></h4>
-					<div class="console-output-left"><span class="fragment">нет времени/желания тестировать?</span></div>
-					<div class="console-output-left"><span class="fragment">используй статический анализ!</span></div>
+					<div class="console-output-left"><span class="fragment">интеграционные тесты</span></div>
+					<div class="console-output-left"><span class="fragment">надо запускать параллельно</span></div>
+					<div class="console-output-left"><span class="fragment">с продуманными именами ресурсов</span></div>
+					<div class="console-output-left"><span class="fragment">разделяя на независимые стэйджи</span></div>
+					<div class="console-output-left"><span class="fragment">и с автоматическим ретраем</span></div>
 					<aside class="notes">
 					</aside>
 				</section>
 
 				<section class="console-left flex-container-column" data-auto-animate>
-					<h4 data-id="console">~&nbsp;<span class="soft-red">infra-test</span>&nbsp;describe&nbsp;<span class="spearmint">"статический анализ"</span></h4>
-					<div class="console-output-left"><span class="fragment">используй встроенные средства</span></div>
-					<div class="fragment " ><pre class="code-size"><code class="console" data-trim data-noescape>
-$ <span class="hljs-keyword">terraform</span> validate
+					<h4 data-id="console">~&nbsp;<span class="soft-red">infra-test</span>&nbsp;use-cases&nbsp;<span class="spearmint">"terratest"</span></h4>
+					<div class="console-output-left"><span class="fragment">тестирование инфраструктурного кода</span></div>
+					<div class="console-output-left"><span class="fragment">post-deployment верификация</span></div>
+					<div class="console-output-left"><span class="fragment">тестирование CI/CD пайплайнов</span></div>
+					<div class="console-output-left"><span class="fragment">разработка SaaS и PaaS</span></div>
 
-$ <span class="hljs-keyword">helm</span> template
-
-$ <span class="hljs-keyword">kubectl</span> -f . --dry-run --validate=true
-					</code></pre></div>
 					<aside class="notes">
 					</aside>
 				</section>
 
 				<section class="console-left flex-container-column" data-auto-animate>
-					<h4 data-id="console">~&nbsp;<span class="soft-red">infra-test</span>&nbsp;describe&nbsp;<span class="spearmint">"статический анализ"</span></h4>
-					<div class="console-output-left"><span class="fragment">используй lint</span></div>
-					<div class="fragment " ><pre class="code-size"><code class="console" data-trim data-noescape>
-$ <span class="hljs-keyword">tflint</span>
-
-$ <span class="hljs-keyword">hadolint</span>
-
-$ <span class="hljs-keyword">helm</span> lint
-
-$ <span class="hljs-keyword">kube-lint</span>
-
-$ <span class="hljs-keyword">yamllint</span>
-					</code></pre></div>
+					<h4 data-id="console">~&nbsp;<span class="soft-red">infra-test</span>&nbsp;answer&nbsp;<span class="spearmint">"почему я?"</span></h4>
 					<aside class="notes">
 					</aside>
 				</section>
 
 				<section class="console-left flex-container-column" data-auto-animate>
-					<h4 data-id="console">~&nbsp;<span class="soft-red">infra-test</span>&nbsp;describe&nbsp;<span class="spearmint">"статический анализ"</span></h4>
-					<div class="console-output-left"><span class="fragment">используй dry-run</span></div>
-					<div class="fragment " ><pre class="code-size"><code class="console" data-trim data-noescape>
-$ <span class="hljs-keyword">terraform</span> plan
-
-$ <span class="hljs-keyword">helm</span> install --dry-run
-
-$ <span class="hljs-keyword">kubectl</span> apply -f <file> --server-dry-run
-					</code></pre></div>
+					<h3 data-id="console">Вопросы</span></h3>
 					<aside class="notes">
 					</aside>
 				</section>
 
 				<section class="console-left flex-container-column" data-auto-animate>
-					<h4 data-id="console">~&nbsp;<span class="soft-red">infra-test</span>&nbsp;solve&nbsp;<span class="underline">problem</span></h4>
-					<div class="console-output-left"><span class="fragment">есть временя/желание тестировать?</span></div>
-					<div class="console-output-left"><span class="fragment">пропускай модульное тестирование,</span></div>
-					<div class="console-output-left"><span class="fragment">оно "бесполезно"!</span></div>
-					<div class="console-output-left"><span class="fragment">делай интеграционные тесты!</span></div>
-					<aside class="notes">
-					</aside>
-				</section>
-
-				<section class="console-left flex-container-column" data-auto-animate>
-					<h4 data-id="console">~&nbsp;<span class="soft-red">infra-test</span>&nbsp;solve&nbsp;<span class="underline">problem</span></h4>
-					<div class="console-output-left"><span class="fragment">есть много времени/желания тестировать?</span></div>
-					<div class="console-output-left"><span class="fragment">переходи от интеграционного</span></div>
-					<div class="console-output-left"><span class="fragment">к end-2-end тестированию!</span></div>
+					<h3 data-id="console">Полезное</span></h3>
 					<aside class="notes">
 					</aside>
 				</section>
 
 				<section class="console-left flex-container-column">
 					<aside class="notes">
+						<h data-id="console">~&nbsp;<span class="soft-red">infra-test</span>&nbsp;exit</h>
 					</aside>
 				</section>
 
@@ -646,6 +732,8 @@ $ <span class="hljs-keyword">kubectl</span> apply -f <file> --server-dry-run
 				hash: true,
 				display: 'flex',
 				center: 'center',
+				pdfSeparateFragments: false,
+				pdfMaxPagesPerSlide: 1,
 
 				// Learn about plugins: https://revealjs.com/plugins/
 				plugins: [ RevealMarkdown, RevealHighlight, RevealNotes ]
