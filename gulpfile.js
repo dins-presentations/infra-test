@@ -316,5 +316,8 @@ gulp.task('serve', () => {
 
 gulp.task('deploy', function () {
     return gulp.src("./dist/**/*")
-        .pipe(deploy())
+        .pipe(deploy({
+            remoteUrl: "https://github.com/dins-presentations/infra-test.git",
+            branch: "gh-pages"
+        }))
 });
