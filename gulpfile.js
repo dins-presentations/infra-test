@@ -14,7 +14,7 @@ const resolve = require('@rollup/plugin-node-resolve').default
 const sass = require('sass')
 
 const gulp = require('gulp')
-const deploy = require('gulp-gh-pages')
+const ghPages = require('gulp-gh-pages')
 const tap = require('gulp-tap')
 const zip = require('gulp-zip')
 const header = require('gulp-header')
@@ -314,10 +314,5 @@ gulp.task('serve', () => {
 
 })
 
-gulp.task('deploy', function () {
-    return gulp.src("./dist/**/*")
-        .pipe(deploy({
-            remoteUrl: "https://github.com/dins-presentations/infra-test.git",
-            branch: "gh-pages"
-        }))
-});
+//TODO
+gulp.task('deploy', () => gulp.src('*.html','./dist/**/*').pipe(ghPages()));
