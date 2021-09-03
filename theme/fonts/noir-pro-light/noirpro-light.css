@@ -1,0 +1,10 @@
+@font-face {
+    font-family: 'Noir Pro Light';
+    src: url('./NoirPro-Light.eot');
+    src: url('./NoirPro-Light.eot?#iefix') format('embedded-opentype'),
+         url('./NoirPro-Light.woff') format('woff'),
+         url('./NoirPro-Light.otf') format('onetype');
+
+    font-weight: normal;
+    font-style: normal;
+}
