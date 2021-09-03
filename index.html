@@ -1,0 +1,1006 @@
+<!doctype html>
+<html xmlns="http://www.w3.org/1999/html" lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>reveal.js</title>
+
+		<link rel="stylesheet" href="dist/reset.css">
+		<link rel="stylesheet" href="dist/reveal.css">
+		<link rel="stylesheet" href="dist/theme/league.css">
+		<link rel="stylesheet" href="dist/theme/fonts/noir-pro-light/noirpro-light.css">
+		<link rel="stylesheet" href="dist/theme/fonts/noir-pro-medium/noirpro-medium.css">
+		<link rel="stylesheet" href="node_modules/@fortawesome/fontawesome-free/css/all.css">
+
+		<!-- Theme used for syntax highlighted code -->
+		<link rel="stylesheet" href="plugin/highlight/code-highlight.css">
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+				<section data-auto-animate>
+					<h2 class="console-left">Как <br> Тестировать Инфраструктурный Код</h2>
+					<aside class="notes">
+						Всем привет!
+						Спасибо, что присоединились сегодня.
+						Меня зовут Андрей и мой доклад будет о тестировании инфраструктурного кода.
+					</aside>
+				</section>
+
+				<section class="console-left flex-container-column" data-auto-animate>
+					<h4 data-id="console">~&nbsp;<span class="soft-red">infra-test</span>&nbsp;describe&nbsp;<span class="underline">current-user</span></h4>
+					<div class="fragment console-output-left">12 лет в обеспечении качества</div>
+					<div class="fragment console-output-left">6 лет автоматизирую тестирование</div>
+					<div class="fragment console-output-left">5 лет в DINS</div>
+					<div class="fragment console-output-left">3 года строю CI/CD</div>
+					<div class="fragment console-output-left">2 года в Калифорнии</div>
+					<aside class="notes">
+						Но начну я с небольшого признания. 12 лет назад я, совершил, наверное, самую большую ошибку в своей жизни.
+						Вместо того чтобы поучиться немного больше и стать разработчиком или на крайний случай девопсом - я прочитал книгу, не помню уже точное название,
+						что-то вроде пособия по жестокому обращению от некоего Романа Савина и пошел работать в тестирование.
+						Примерно 6 лет назад я попытался исправить ситуацию и начал писать код который тестирует другой код.
+						Очень быстро я осознал что это стоит делать в хорошей компании,
+						которая предоставляет возможности для развития и роста, и заботится о своих сотрудниках.
+
+						Возвращаясь к теме доклада, хочу в первую очередь очертить проблему, которую мы будем решать.
+					</aside>
+				</section>
+
+				<section class="console-left flex-container-column" data-auto-animate>
+					<h4 data-id="console">~&nbsp;<span class="soft-red">infra-test</span>&nbsp;describe&nbsp;<span class="underline">problem</span></h4>
+					<div class="fragment console-output-left" data-fragment-index="1">команда разработки</div>
+					<div class="console-output-left">
+						<span class="fragment" data-fragment-index="2">
+							<span class="fragment strike" data-fragment-index="4">хочет сама деплоить</span>
+						</span>
+						<span class="fragment" data-fragment-index="5">деплоит</span></div>
+					<div class="console-output-left"><span class="fragment" data-fragment-index="3">инфраструктуру</span></div>
+					<aside class="notes">
+						А проблема у тестировщиков, как известно, всего одна.
+						Это разработчики.
+						Еще они иногда называют себя командой разработки, а для диверсификации включают в нее нас с вами - тестировщиков.
+						И вот эта команда разработки хочет сама деплоить инфраструктурную часть своего приложения.
+						А иногда ситуация усугубляется тем фактом, что они это уже делают.
+					</aside>
+				</section>
+
+				<section class="console-left flex-container-column" data-auto-animate>
+					<h4 data-id="console">~&nbsp;<span class="soft-red">infra-test</span>&nbsp;describe&nbsp;<span class="underline">problem</span>&nbsp;</h4>
+					<div class="fragment console-output-left">облачные вычисления</div>
+					<div class="fragment console-output-left">инфраструктура как код</div>
+					<aside class="notes">
+						Как вообще такое стало возможно?
+						Для себя я вижу 2 причины - технологии облачных вычислений и подход инфраструктура как код.
+					</aside>
+				</section>
+
+				<section class="console-left flex-container-column" data-auto-animate>
+					<h4 data-id="console">~&nbsp;<span class="soft-red">infra-test</span>&nbsp;describe&nbsp;<span class="spearmint">"облачные вычисления"</span></h4>
+					<div class="fragment console-output-left">как услуга:</div>
+					<div class="fragment console-output-left"><span class="spearmint">S</span>aaS - программное обеспечение</div>
+					<div class="fragment console-output-left"><span class="spearmint">P</span>aaS - платформа</div>
+					<div class="fragment console-output-left"><span class="spearmint">I</span>aaS - инфраструктура</div>
+					<aside class="notes">
+						Облачные вычисления это когда пользователю дают доступ к общим вычислительным ресурсам по требованию.
+						То есть предоставляют их как услугу. На сегодняшний день выделяют три основных подобных услуги.
+						Software as a Service - предоставление доступа к программному обеспечению, первопроходцем здесь можно считать компанию Salesforce с ее CRM системой.
+						Platform as a Service - когда потребителю дается возможность размещения своих приложений в общей инфраструктуре.
+						И Infrastructure as a Service - когда пользователю выдается контроль над частью облачной инфраструктуры и он может использовать ее на свое усмотрение.
+						Для второй и третьей модели законодателем моды является конечно же AWS - Amazon Web Services.
+					</aside>
+				</section>
+
+				<section class="console-left flex-container-column" data-auto-animate>
+					<h4 data-id="console">~&nbsp;<span class="soft-red">infra-test</span>&nbsp;describe&nbsp;<span class="spearmint">"инфраструктура как код"</span></h4>
+					<div class="fragment console-output-left" style="display: flex; align-items: flex-end"><i class="fas fa-arrow-circle-up"></i>&nbsp;<span>скорость - автоматизируем рутину</span></div>
+					<div class="fragment console-output-left" style="display: flex; align-items: flex-end"><i class="fas fa-arrow-circle-down"></i>&nbsp;<span>цена - экономим время</span></div>
+					<div class="fragment console-output-left" style="display: flex; align-items: flex-end"><i class="fas fa-arrow-circle-down"></i>&nbsp;<span>риски -</span>&nbsp;<span style="text-decoration: line-through">человеческий фактор</span></div>
+					<aside class="notes">
+						Название инфраструктура как код говорит само за себя.
+						Этот подход базируется на трех ключевых моментах.
+						Увеличение скорости развертывания за счет автоматизации рутины.
+						Уменьшение стоимости владения за счет экономии времени от предыдущего пункта и более эффективного использования.
+						И третье это уменьшение рисков за счет уменьшения человеческого фактора в работе системы и использование этого фактора в ревью кода, аудита и тестировании.
+						Собственно в тестировании такого кода мы у будем вместе сегодня разбираться.
+					</aside>
+				</section>
+
+				<section class="console-left flex-container-column" data-auto-animate>
+					<h4 data-id="console">~&nbsp;<span class="soft-red">infra-test</span>&nbsp;answer&nbsp;<span class="spearmint">"почему я?"</span></h4>
+					<div class="fragment console-output-left">чтобы</div>
+					<div class="fragment console-output-left">применить лучшие практики</div>
+					<div class="fragment console-output-left">обеспечить инфраструктуру тестирования</div>
+					<div class="fragment console-output-left">и не бояться делать изменения</div>
+					<aside class="notes">
+						На резонный вопрос, который вы мне не сможете сейчас озвучить - а зачем мне, как тестировщику, это надо?
+						- я могу ответить так:
+						хороший тестировщик всегда переживает за то, чтобы на его проекте использовались лучшие практики,
+						чтобы у всех в команде был доступ к средствам тестирования и обеспечения качества,
+						и чтобы никто не боялся делать изменения в коде.
+						Поэтому если мы не позаботимся об этом инфраструктурном коде, то никто другой этого точно не сделает.
+					</aside>
+				</section>
+
+				<section class="console-left flex-container-column" data-auto-animate>
+					<h4 data-id="console">~&nbsp;<span class="soft-red">infra-test</span>&nbsp;list&nbsp;<span class="underline">requirements</span></h4>
+					<div class="fragment console-output-left">docker</div>
+					<div class="fragment console-output-left">kubernetes</div>
+					<div class="fragment console-output-left">helm</div>
+					<div class="fragment console-output-left">aws</div>
+					<div class="fragment console-output-left">terraform</div>
+					<aside class="notes">
+						Теперь когда мы осознали с какой проблемой мы имеем дело, давайте вникнем в нее подробнее.
+						Вот пример технологий которые используются командой разработки.
+						Docker для создания контейнеров.
+						Kubernetes для запуска этих контейнеров.
+						Helm, чтобы описывать шаблоны ресурсов для Kubernetes.
+						AWS, чтобы создавать необходимые ресурсы в облаке.
+						И terraform, чтобы описывать эти ресурсы.
+					</aside>
+				</section>
+
+				<section class="console-left flex-container-column" data-auto-animate>
+					<h4 data-id="console">~&nbsp;<span class="soft-red">infra-test</span>&nbsp;solve&nbsp;<span class="underline">problem</span> --dry-run</h4>
+					<div class="console-output-left"><span class="fragment">нет времени/желания тестировать?</span></div>
+					<div class="console-output-left"><span class="fragment">статический анализ!</span></div>
+					<aside class="notes">
+						Проблему тестирования подобного зоопарка можно попробовать решить достаточно простым способом, доступным каждому из коробки,
+						особенно когда у вас нет ни времени ни желания, а релиз уже наступил вчера.
+						Можно использовать статический анализ и выжать из него максимум возможного.
+					</aside>
+				</section>
+
+				<section class="console-left flex-container-column" data-auto-animate>
+					<h4 data-id="console">~&nbsp;<span class="soft-red">infra-test</span>&nbsp;describe&nbsp;<span class="spearmint">"статический анализ"</span></h4>
+					<div class="console-output-left"><span class="fragment">встроенные средства</span></div>
+					<div class="fragment " ><pre class="code-size"><code class="console" data-trim data-noescape>
+$ <span class="hljs-keyword">terraform</span> validate
+
+$ <span class="hljs-keyword">helm</span> template
+
+$ <span class="hljs-keyword">kubectl</span> -f . --dry-run --validate=true
+					</code></pre></div>
+					<aside class="notes">
+						Во-первых в перечисленных средствах есть встроенные валидаторы.
+					</aside>
+				</section>
+
+				<section class="console-left flex-container-column" data-auto-animate>
+					<h4 data-id="console">~&nbsp;<span class="soft-red">infra-test</span>&nbsp;describe&nbsp;<span class="spearmint">"статический анализ"</span></h4>
+					<div class="console-output-left"><span class="fragment">lint</span></div>
+					<div class="fragment " ><pre class="code-size"><code class="console" data-trim data-noescape>
+$ <span class="hljs-keyword">tflint</span>
+
+$ <span class="hljs-keyword">hadolint</span>
+
+$ <span class="hljs-keyword">helm</span> lint
+
+$ <span class="hljs-keyword">kube-lint</span>
+
+$ <span class="hljs-keyword">yamllint</span>
+					</code></pre></div>
+					<aside class="notes">
+						Во-вторых есть дополнительные инструменты которые проверяют ваш код на предмет очевидных или не очень ошибок.
+					</aside>
+				</section>
+
+				<section class="console-left flex-container-column" data-auto-animate>
+					<h4 data-id="console">~&nbsp;<span class="soft-red">infra-test</span>&nbsp;describe&nbsp;<span class="spearmint">"статический анализ"</span></h4>
+					<div class="console-output-left"><span class="fragment">dry-run</span></div>
+					<div class="fragment " ><pre class="code-size"><code class="console" data-trim data-noescape>
+$ <span class="hljs-keyword">terraform</span> plan
+
+$ <span class="hljs-keyword">helm</span> install --dry-run
+
+$ <span class="hljs-keyword">kubectl</span> apply -f FILENAME --server-dry-run
+					</code></pre></div>
+					<aside class="notes">
+						И последнее, в этих инструментах есть возможность эмулировать создание ресурсов использую текущее состояние инфраструктуры.
+					</aside>
+				</section>
+
+				<section class="console-left flex-container-column" data-auto-animate>
+					<h4 data-id="console">~&nbsp;<span class="soft-red">infra-test</span>&nbsp;solve&nbsp;<span class="underline">problem</span></h4>
+					<div class="console-output-left"><span class="fragment">есть временя/желание тестировать?</span></div>
+					<div class="console-output-left"><span class="fragment">выбираем инструмент!</span></div>
+					<aside class="notes">
+						Если вам кажется что этими средствами мало что можно протестировать то вам не кажется.
+						Но каждый день в чат поддержки обращается кто-то с проблемой, что у него не рендерятся темплейты во время деплоймента,
+						и причину зачастую можно было обнаружить еще на этапе сборки деплоймент пакета.
+
+						Давайте рассмотрим ситуацию когда релиз еще не завтра и у нас есть силы и время на тестирование.
+						Сделаем вид, что со стратегией и планом тестирования мы уже определились и можем перейти сразу к самому интересному - выбору инструмента.
+					</aside>
+				</section>
+
+				<section class="console-left flex-container-column" data-auto-animate>
+					<h4 data-id="console">~&nbsp;<span class="soft-red">infra-test</span>&nbsp;list&nbsp;<span class="underline">tools</span></h4>
+					<div class="fragment console-output-left">&nbsp;&nbsp;(kitchen|rspec|ruby)-terraform</div>
+					<div class="fragment console-output-left">&nbsp;&nbsp;serverspec</div>
+					<div class="fragment console-output-left">&nbsp;&nbsp;goss</div>
+					<div class="fragment console-output-left">&nbsp;&nbsp;awsspec</div>
+					<div class="fragment console-output-left">&nbsp;&nbsp;terratest</div>
+					<aside class="notes">
+						На рынке опен-сорса у нас есть всякие разные фрэймворки для тестирования терраформа
+						Для проверки серверов и виртуальных машин
+						Для проверки ресурсов в AWS
+						И есть terratest, в котором есть модули для тестирования всех перечисленных технологий - docker, helm, kubernetes, terraform, aws.
+					</aside>
+				</section>
+
+				<section class="console-left flex-container-column" data-auto-animate>
+					<h4 data-id="console">~&nbsp;<span class="soft-red">infra-test</span>&nbsp;select <span class="spearmint">"terratest"</span></h4>
+					<div class="fragment console-output-left" style="display: flex; align-items: flex-end"><a href="https://github.com/gruntwork-io/terratest" target="_blank" rel="noopener noreferrer">gruntwork-io/terratest</a>&nbsp;на&nbsp;<i class="fab fa-github"></i><span>&nbsp;c 2018 года</span></div>
+					<div class="fragment console-output-left">а еще нужно будет изучить Go</div>
+					<aside class="notes">
+						В публичном доступе terratest существует с 2018 года и достаточно активно поддерживается и новый релиз появляется примерно каждую неделю.
+						Единственный нюанс который, как мне кажется, может вызвать сомнения, это то, что надо будет писать тесты на go.
+					</aside>
+				</section>
+
+				<section style="justify-content: center">
+					<img data-src="img/golang.png" src="img/golang.png" alt="golang">
+					<aside class="notes">
+						Лично для меня в этом нет никакой проблемы.
+						Это в любом случае лучше чем писать код на yaml и json.
+						Вообще я пришел в Go из Java и мне кажется что эти языки очень похожи.
+					</aside>
+				</section>
+
+				<section class="console-left flex-container-column" data-auto-animate>
+					<h4 data-id="console">~&nbsp;<span class="soft-red">infra-test</span>&nbsp;compare java go</h4>
+					<div class="console-output-right" style="display: flex; justify-content: space-evenly; flex-direction: row; flex-wrap: nowrap">
+						<div style="display: flex; flex-direction: column; align-items: flex-start;">
+							<div class="fragment" data-fragment-index="1">&nbsp;</div>
+							<div class="fragment" data-fragment-index="2">OOP</div>
+							<div class="fragment" data-fragment-index="5">DI</div>
+							<div class="fragment" data-fragment-index="8">Generics</div>
+							<div class="fragment" data-fragment-index="11">Exceptions</div>
+						</div>
+						<div style="display: flex; flex-direction: column; align-items: center;">
+							<div class="fragment" data-fragment-index="1">Java</div>
+							<div class="fragment hard-red" data-fragment-index="3">yes</div>
+							<div class="fragment hard-red" data-fragment-index="6">yes</div>
+							<div class="fragment hard-red" data-fragment-index="9">yes</div>
+							<div class="fragment hard-red" data-fragment-index="12">yes</div>
+						</div>
+						<div style="display: flex; flex-direction: column; align-items: center;">
+							<div class="fragment" data-fragment-index="1">Go</div>
+							<div class="fragment" data-fragment-index="4"><span class="spearmint">no</span>/<span class="hard-red">yes</span></div>
+							<div class="fragment" data-fragment-index="7"><span class="spearmint">no</span>/<span class="hard-red">yes</span></div>
+							<div class="fragment" data-fragment-index="10"><span class="spearmint">no</span></div>
+							<div class="fragment" data-fragment-index="13"><span class="spearmint">no</span></div>
+						</div>
+					</div>
+					<aside class="notes">
+						Я даже специально подготовил для вас сравнительную табличку.
+						Например в Java есть объекты и класс и в тоже go есть структуры.
+						В Java есть dependncy ingjection и в go его тоже можно затащить, но мы точно не будем это делать для тестов.
+						В Java есть дженерики а в го их нет.
+						В Java есть исключения, exceptions и в тоже go есть ошибки.
+
+						Я нисколько не хотел вас запутать. И на самом деле go позволяет писать код и тесты к ним в гораздо более простой и приятной форме чем на Java.
+						Достаточно всего несколько дней потратить на ознакомление с синтаксисом и основными концепциями go и можно приступать к написанию первых тестов.
+						А для того чтобы облегчить для вас этот процесс я подготовил несколько примеров кода и сейчас мы их разберем.
+					</aside>
+				</section>
+
+				<section class="console-left flex-container-column" data-auto-animate>
+					<h4 data-id="console">~&nbsp;<span class="soft-red">infra-test</span>&nbsp;test terraform</h4>
+					<div class="fragment " ><pre class="code-size"><code class="console" data-trim data-noescape>
+infra-test-example
+└ examples
+  └ hello-terraform
+    <span class="hljs-string">└ main.tf</span>
+    └ outputs.tf
+    └ variables.tf
+└ modules
+└ test
+  <span class="hljs-string">└ hello_terraform_test.go</span>
+					</code></pre></div>
+					<aside class="notes">
+					</aside>
+				</section>
+
+				<section class="console-left flex-container-column" data-auto-animate>
+					<h4 data-id="console">~&nbsp;<span class="soft-red">infra-test</span>&nbsp;view main.tf</h4>
+					<div class="fragment " ><pre class="code-size"><code class="ruby" data-trim data-noescape>
+<span class="hljs-keyword" >resource</span> "aws_lambda_function" "hello_world" {
+  <span class="hljs-keyword" >function_name</span> = "HelloWorld"
+  <span class="hljs-keyword" >role</span> = aws_iam_role.lambda_exec.arn
+  # ...
+}
+
+<span class="hljs-keyword" >resource</span> "aws_iam_role" "lambda_exec" {
+  <span class="hljs-keyword" >name</span> = "serverless_lambda"
+  # ...
+}
+					</code></pre></div>
+					<aside class="notes">
+					</aside>
+				</section>
+
+				<section class="console-left flex-container-column" data-auto-animate>
+					<h4 data-id="console">~&nbsp;<span class="soft-red">infra-test</span>&nbsp;test terraform</h4>
+					<div class="fragment " ><pre class="code-size"><code class="console" data-trim data-noescape>
+$ <span class="hljs-keyword">cd</span> examples/hello-terraform
+$ <span class="hljs-keyword">terraform</span> apply
+<span class="hljs-string">Outputs:</span>
+<span class="hljs-string">url = abcdefghij.execute-api.us-east-1.amazonaws.com</span>
+
+$ <span class="hljs-keyword">curl</span> abcdefghij.execute-api.us-east-1.amazonaws.com
+<span class="hljs-string">Hello, World!</span>
+					</code></pre></div>
+					<aside class="notes">
+					</aside>
+				</section>
+
+				<section class="console-left flex-container-column" data-auto-animate>
+					<h4 data-id="console">~&nbsp;<span class="soft-red">infra-test</span>&nbsp;view hello_terraform_test.go</h4>
+					<div class="fragment " ><pre class="code-size"><code class="golang" data-trim data-noescape data-line-numbers="1-8|2-4|6|7|5">
+func TestTerraformHelloWorld(t *testing.T) {
+  terraformOptions := &terraform.Options{
+    TerraformDir: "examples/hello-terraform",
+  }
+  defer terraform.<span class="hljs-section">Destroy</span>(t, terraformOptions)
+  terraform.<span class="hljs-section">InitAndApply</span>(t, terraformOptions)
+  <span class="hljs-section">validate</span>(t, terraformOptions)
+}
+					</code></pre></div>
+					<aside class="notes">
+					</aside>
+				</section>
+
+				<section class="console-left flex-container-column" data-auto-animate>
+					<h4 data-id="console">~&nbsp;<span class="soft-red">infra-test</span>&nbsp;view hello_terraform_test.go</h4>
+					<div class="fragment " ><pre class="code-size"><code class="golang" data-trim data-noescape data-line-numbers="1-12|2|3-6|7-8|9-10">
+func validate(t *testing.T, opts *terraform.Options) {
+  url := terraform.<span class="hljs-section">Output</span>(t, opts, "url")
+  http_helper.<span class="hljs-section">HttpGetWithRetry</span>(
+    t, // testing.TestingT
+    url, // url
+    nil, // tlsConfig
+    200, // expectedStatus
+    "Hello, World!", // expectedBody
+    10, // retries
+    3 * time.Second // sleepBetweenRetries
+  )
+}
+					</code></pre></div>
+					<aside class="notes">
+					</aside>
+				</section>
+
+				<section class="console-left flex-container-column" data-auto-animate>
+					<h4 data-id="console">~&nbsp;<span class="soft-red">infra-test</span>&nbsp;test kubernetes</h4>
+					<div class="fragment " ><pre class="code-size"><code class="console" data-trim data-noescape>
+infra-test-example
+└ examples
+  ...
+  └ hello-k8s
+    <span class="hljs-string">└ Dockerfile</span>
+    <span class="hljs-string">└ deployment.yaml</span>
+└ modules
+└ test
+  ...
+  <span class="hljs-string">└ hello_k8s_test.go</span>
+					</code></pre></div>
+					<aside class="notes">
+					</aside>
+				</section>
+
+
+
+				<section class="console-left flex-container-column" data-auto-animate>
+					<h4 data-id="console">~&nbsp;<span class="soft-red">infra-test</span>&nbsp;view Dockerfile</h4>
+					<div class="fragment " ><pre class="code-size"><code class="dockerfile" data-trim data-noescape>
+FROM ubuntu:21.04
+EXPOSE 8080
+ARG DEBIAN_FRONTEND=noninteractive
+RUN apt-get update && apt-get install -y busybox
+RUN echo 'Hello, World!' > index.html
+CMD ["busybox", "httpd", "-f", "-p", "8080"]
+					</code></pre></div>
+					<aside class="notes">
+					</aside>
+				</section>
+
+				<section class="console-left flex-container-column" data-auto-animate>
+					<h4 data-id="console">~&nbsp;<span class="soft-red">infra-test</span>&nbsp;view deployment.yaml</h4>
+					<div class="fragment " ><pre class="code-size"><code class="yaml" data-trim data-noescape>
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hello-world
+spec:
+  selector:
+    matchLabels:
+      app: hello-world
+  replicas: 1
+  spec:
+    containers:
+    - name: hello-world # ...
+---
+apiVersion: v1
+kind: Service # ...
+					</code></pre></div>
+					<aside class="notes">
+					</aside>
+				</section>
+
+				<section class="console-left flex-container-column" data-auto-animate>
+					<h4 data-id="console">~&nbsp;<span class="soft-red">infra-test</span>&nbsp;describe deployment</h4>
+					<div class="fragment " ><pre class="code-size"><code class="console" data-trim data-noescape>
+
+&nbsp;        ┌───────────────────────────┐
+&nbsp;        │         <span class="hljs-string">Deployment</span>        │
+&nbsp;        └─────────────┬─────────────┘
+&nbsp;            ┌─────────┼─────────┐
+&nbsp;        ┌───┴───┐ ┌───┴───┐ ┌───┴───┐
+&nbsp;        │<span class="hljs-keyword">Replica</span>│ │<span class="hljs-keyword">Replica</span>│ │<span class="hljs-keyword">Replica</span>│
+&nbsp;        │  <span class="hljs-keyword">Set</span>  │ │  <span class="hljs-keyword">Set</span>  │ │  <span class="hljs-keyword">Set</span>  │
+&nbsp;        │     v1│ │     v2│ │     v3│
+&nbsp;        └───┬───┘ └───┬───┘ └───┬───┘
+&nbsp;           ┌┼┐       ┌┼┐       ┌┼┐
+&nbsp;         ┌─┴┴┤     ┌─┴┴┤     ┌─┴┴┤
+&nbsp;         │<span class="hljs-section">Pod</span>├┐    │<span class="hljs-section">Pod</span>├┐    │<span class="hljs-section">Pod</span>├┐
+&nbsp;         └┬──┘├┐   └┬──┘├┐   └┬──┘├┐
+&nbsp;          └┬──┘│    └┬──┘│    └┬──┘│
+&nbsp;           └───┘     └───┘     └───┘
+					</code></pre></div>
+					<aside class="notes">
+					</aside>
+			</section>
+
+				<section class="console-left flex-container-column" data-auto-animate>
+					<h4 data-id="console">~&nbsp;<span class="soft-red">infra-test</span>&nbsp;test kubernetes</h4>
+					<div class="fragment " ><pre class="code-size"><code class="console" data-trim data-noescape>
+$ <span class="hljs-keyword">cd</span> examples/hello-k8s
+$ <span class="hljs-keyword">docker</span> build -t infra-test/hello-world:latest .
+<span class="hljs-string">Successfully tagged infra-test/hello-world:latest</span>
+
+$ <span class="hljs-keyword">kubectl</span> apply -f .
+<span class="hljs-string">deployment.apps/hello-world created</span>
+<span class="hljs-string">service/hello-world created</span>
+
+$ <span class="hljs-keyword">curl</span> localhost:8080
+<span class="hljs-string">Hello, World!</span>
+					</code></pre></div>
+					<aside class="notes">
+					</aside>
+				</section>
+
+				<section class="console-left flex-container-column" data-auto-animate>
+					<h4 data-id="console">~&nbsp;<span class="soft-red">infra-test</span>&nbsp;view hello_k8s_test.go</h4>
+					<div class="fragment " ><pre class="code-size"><code class="golang" data-trim data-noescape data-line-numbers="1-10|2">
+func TestKubernetesHelloWorld(t *testing.T) {
+  <span class="hljs-section">buildDockerImage(t)</span>
+
+  kubeResourcePath := "examples/hello-k8s/deployment.yml"
+  options := k8s.<span class="hljs-section">NewKubectlOptions</span>("", "", "default")
+  defer k8s.<span class="hljs-section">KubectlDelete</span>(t, options, kubeResourcePath)
+  k8s.<span class="hljs-section">KubectlApply</span>(t, options, kubeResourcePath)
+
+  <span class="hljs-section">validate</span>(t, options)
+}
+					</code></pre></div>
+					<aside class="notes">
+					</aside>
+				</section>
+
+				<section class="console-left flex-container-column" data-auto-animate>
+					<h4 data-id="console">~&nbsp;<span class="soft-red">infra-test</span>&nbsp;view hello_k8s_test.go</h4>
+					<div class=><pre class="code-size"><code class="golang" data-trim data-noescape>
+func buildDockerImage(t *testing.T) {
+  options := &docker.<span class="hljs-section">BuildOptions</span>{
+    Tags: []string{"infra-test/hello-world:latest"},
+  }
+  path := "examples/hello-k8s"
+  docker.<span class="hljs-section">Build</span>(t, path, options)
+}
+					</code></pre></div>
+					<aside class="notes">
+					</aside>
+				</section>
+
+				<section class="console-left flex-container-column" data-auto-animate>
+					<h4 data-id="console">~&nbsp;<span class="soft-red">infra-test</span>&nbsp;view hello_k8s_test.go</h4>
+					<div ><pre class="code-size"><code class="golang" data-trim data-noescape data-line-numbers="2|4|5|7|9|6">
+func TestKubernetesHelloWorld(t *testing.T) {
+  <span class="hljs-section">buildDockerImage(t)</span>
+
+  kubeResourcePath := "examples/hello-k8s/deployment.yml"
+  options := k8s.<span class="hljs-section">NewKubectlOptions</span>("", "", "default")
+  defer k8s.<span class="hljs-section">KubectlDelete</span>(t, options, kubeResourcePath)
+  k8s.<span class="hljs-section">KubectlApply</span>(t, options, kubeResourcePath)
+
+  <span class="hljs-section">validate</span>(t, options)
+}
+					</code></pre></div>
+					<aside class="notes">
+					</aside>
+				</section>
+
+				<section class="console-left flex-container-column" data-auto-animate>
+					<h4 data-id="console">~&nbsp;<span class="soft-red">infra-test</span>&nbsp;view hello_k8s_test.go</h4>
+					<div class="fragment " ><pre class="code-size"><code class="golang" data-trim data-noescape data-line-numbers="1-12|2-3|5-8">
+func validate(t *testing.T, opts *k8s.KubectlOptions) {
+  k8s.<span class="hljs-section">WaitUntilServiceAvailable</span>(t,
+    opts, "hello-world", 10, 1*time.Second)
+
+  http_helper.<span class="hljs-section">HttpGetWithRetry</span>(
+    t, // testing.TestingT
+    <span class="hljs-section">serviceUrl</span>(t, opts), // url
+    nil, // tlsConfig
+    200, // expectedStatus
+    "Hello, World!", // expectedBody
+    10, // retries
+    3 * time.Second // sleepBetweenRetries
+  )
+}
+					</code></pre></div>
+					<aside class="notes">
+					</aside>
+				</section>
+
+				<section class="console-left flex-container-column" data-auto-animate>
+					<h4 data-id="console">~&nbsp;<span class="soft-red">infra-test</span>&nbsp;view hello_k8s_test.go</h4>
+					<div><pre class="code-size"><code class="golang" data-trim data-noescape>
+func serviceUrl(t *testing.T, opts *k8s.KubectlOptions) string {
+  service := k8s.<span class="hljs-section">GetService</span>(t,
+    opts, "hello-world")
+
+  url := k8s.<span class="hljs-section">GetServiceEndpoint</span>(t, opts, service, 8080)
+  return fmt.Sprintf("http://%s", url)
+}
+					</code></pre></div>
+					<aside class="notes">
+					</aside>
+				</section>
+
+				<section class="console-left flex-container-column" data-auto-animate>
+					<h4 data-id="console">~&nbsp;<span class="soft-red">infra-test</span>&nbsp;view hello_k8s_test.go</h4>
+					<div class=><pre class="code-size"><code class="golang" data-trim data-noescape data-line-numbers="5-8|9-10|11-12">
+func validate(t *testing.T, opts *k8s.KubectlOptions) {
+  k8s.<span class="hljs-section">WaitUntilServiceAvailable</span>(t,
+    opts, "hello-world", 10, 1*time.Second)
+
+  http_helper.<span class="hljs-section">HttpGetWithRetry</span>(
+    t, // testing.TestingT
+    <span class="hljs-section">serviceUrl</span>(t, opts), // url
+    nil, // tlsConfig
+    200, // expectedStatus
+    "Hello, World!", // expectedBody
+    10, // retries
+    3 * time.Second // sleepBetweenRetries
+  )
+}
+					</code></pre></div>
+					<aside class="notes">
+					</aside>
+				</section>
+
+				<section class="console-left flex-container-column" data-auto-animate>
+					<h4 data-id="console">~&nbsp;<span class="soft-red">infra-test</span>&nbsp;test helm</h4>
+					<div class="fragment " ><pre class="code-size"><code class="console" data-trim data-noescape>
+infra-test-example
+└ examples
+  ...
+  └ hello-helm
+    └ templates
+      <span class="hljs-string">└ deployment.yaml</span>
+      <span class="hljs-string">└ service.yaml</span>
+      <span class="hljs-string">└ _helpers.tpl</span>
+    <span class="hljs-string">└ Chart.yaml</span>
+    <span class="hljs-string">└ values.yaml</span>
+└ modules
+└ test
+  ...
+  <span class="hljs-string">└ hello_helm_test.go</span>
+					</code></pre></div>
+					<aside class="notes">
+					</aside>
+				</section>
+
+				<section class="console-left flex-container-column" data-auto-animate>
+					<h4 data-id="console">~&nbsp;<span class="soft-red">infra-test</span>&nbsp;view Chart.yaml</h4>
+					<div class="fragment " ><pre class="code-size"><code class="yaml" data-trim data-noescape>
+apiVersion: v1
+name: hello_helm
+description: A minimal Helm chart
+version: 0.0.1
+					</code></pre></div>
+					<aside class="notes">
+					</aside>
+				</section>
+
+				<section class="console-left flex-container-column" data-auto-animate>
+					<h4 data-id="console">~&nbsp;<span class="soft-red">infra-test</span>&nbsp;view values.yaml</h4>
+					<div class="fragment " ><pre class="code-size"><code class="yaml" data-trim data-noescape>
+stage: pro
+version: latest
+					</code></pre></div>
+					<aside class="notes">
+					</aside>
+				</section>
+
+				<section class="console-left flex-container-column" data-auto-animate>
+					<h4 data-id="console">~&nbsp;<span class="soft-red">infra-test</span>&nbsp;view _helpers.tpl</h4>
+					<div class="fragment " ><pre class="code-size"><code class="go" data-trim data-noescape data-line-numbers="1-10|1|2|3-4|5-6|7-8">
+{{- define "rc.replicas" -}}
+  {{- $stage := .Values.stage | lower -}}
+  {{- if (eq $stage "pro") -}}
+    {{- print 5 -}}
+  {{- else if (eq $stage "stage") -}}
+    {{- print 3 -}}
+  {{- else -}}
+    {{- print 1 -}}
+  {{- end -}}
+{{- end -}}
+					</code></pre></div>
+					<aside class="notes">
+					</aside>
+				</section>
+
+				<section class="console-left flex-container-column" data-auto-animate>
+					<h4 data-id="console">~&nbsp;<span class="soft-red">infra-test</span>&nbsp;view deployment.yaml</h4>
+					<div class="fragment " ><pre class="code-size"><code class="yaml" data-trim data-noescape data-line-numbers="1-12|5|12">
+apiVersion: apps/v1
+kind: Deployment
+# ...
+spec:
+  replicas: {{ include "rc.replicas" }}
+# ...
+  template:
+# ...
+    spec:
+      containers:
+      - name: hello-world
+        image: infra-test/hello-world:{{ .Values.version }}
+					</code></pre></div>
+					<aside class="notes">
+					</aside>
+				</section>
+
+				<section class="console-left flex-container-column" data-auto-animate>
+					<h4 data-id="console">~&nbsp;<span class="soft-red">infra-test</span>&nbsp;view hello_helm_test.go</h4>
+					<div class="fragment " ><pre class="code-size"><code class="golang" data-trim data-noescape data-line-numbers="1-22|2-8|4-5|10-14|16-17|19-22">
+func TestHelmHelloWorld(t *testing.T) {
+  options := &helm.<span class="hljs-section">Options</span>{
+  	SetValues: map[string]string{
+  		"stage": "stage",
+  		"version": "v1",
+  	},
+  	KubectlOptions: k8s.<span class="hljs-section">NewKubectlOptions</span>("", "", "my-ns"),
+  }
+
+  output := helm.<span class="hljs-section">RenderTemplate</span>(t,
+     options,
+     "examples/hello-helm", // path to chart
+     "hello-helm", // release
+     []string{"templates/deployment.yaml"}) // show only
+
+  var deployment appsv1.<span class="hljs-section">Deployment</span>
+  helm.<span class="hljs-section">UnmarshalK8SYaml</span>(t, output, &deployment)
+
+  require.<span class="hljs-section">Equal</span>(t, deployment.<span class="hljs-section">Spec.Replicas</span>, 3)
+  require.<span class="hljs-section">Equal</span>(t,
+    deployment.<span class="hljs-section">Spec.Template.Spec.Containers[0].Image</span>,
+    "infra-test/hello-world:v1")
+}
+
+					</code></pre></div>
+					<aside class="notes">
+					</aside>
+				</section>
+
+				<section class="console-left flex-container-column" data-auto-animate>
+					<h4 data-id="console">~&nbsp;<span class="soft-red">infra-test</span>&nbsp;solve&nbsp;<span class="underline">problem</span></h4>
+					<div class="console-output-left"><span class="fragment">модульные тесты</span></div>
+					<div class="console-output-left"><span class="fragment">работают в независимых аккаунтах</span></div>
+					<div class="console-output-left"><span class="fragment">и требуют регулярной чистки</span></div>
+					<aside class="notes">
+						Те примеры которые мы сейчас с вами разобрали выглядят как модульные или юнит тесты,
+						они направлены на проверку отдельной фичи и могут запускаться независимо друг от друга.
+						Но есть одно но, эти тесты создают реальные объекты в инфраструктуре.
+						Поэтому чтобы они эффективно работали надо всегда запускать их в независимых тестовых аккаунтах, нэймспейсках или кластерах и на регулярной основе проводить чистку
+						удаляя объекты оставшиеся от неудачных запусков.
+
+						К сожалению в мире тестирования инфраструктурного кода модульные тесты имеют те же проблемы, что и в обычном мире.
+						Они проверяют только отдельные модули игнорируя ошибки которые возникают при интеграции модулей между собой.
+					</aside>
+				</section>
+
+				<section class="console-left flex-container-column" data-auto-animate>
+					<h4 data-id="console">~&nbsp;<span class="soft-red">infra-test</span>&nbsp;view real-world-terraform</h4>
+					<div class="fragment " ><pre class="code-size"><code class="console" data-trim data-noescape>
+&nbsp;                                   ┌───┐
+&nbsp;                                   │<span class="hljs-keyword">AWS</span>│
+&nbsp;                                   ├───┼─────────────┐
+&nbsp;                                   │<span class="hljs-string">VPC</span>│   ┌───┬───┐ │
+&nbsp;       ┌───┐       ┌───┐           ├───┘   │<span class="hljs-string">EKS</span>│   │ │
+&nbsp;       │<span class="hljs-keyword">AWS</span>│       │<span class="hljs-keyword">AWS</span>│           │       ├───┘   │ │
+&nbsp;       ├───┴───┐   ├───┴───────┐   │ ┌───┐ │ ┌───┐ │ │
+&nbsp;    ──>│<span class="hljs-section">Route53</span>├──>│<span class="hljs-section">API Gateway</span>├───┼>│<span class="hljs-section">ALB</span>├─┼>│<span class="hljs-literal">APP</span>│ │ │
+&nbsp;       └───────┘   └───────────┘   │ └───┘ │ └─┬─┘ │ │
+&nbsp;                                   │       └───┼───┘ │
+&nbsp;                                   │ ┌───┐     │     │
+&nbsp;                                   │ │<span class="hljs-section">MSK</span>│<────┘     │
+&nbsp;                                   │ └───┘           │
+&nbsp;                                   └─────────────────┘
+					</code></pre></div>
+					<aside class="notes">
+						Посмотрите на пример реальной инфраструктуры одного из сервисов.
+						Здесь у нас и создание DNS объектов в Route53. Создание и настройка API Gateway.
+						Создание балансиврощика нагрузки, кубернетис кластера, кафки.
+						И для всего этого написано большое количество кода, который никем не тестируется.
+					</aside>
+				</section>
+
+				<section class="console-left flex-container-column" data-auto-animate>
+					<h4 data-id="console">~&nbsp;<span class="soft-red">infra-test</span>&nbsp;view real-world-k8s</h4>
+					<div class="fragment " ><pre class="code-size"><code class="console" data-trim data-noescape>
+&nbsp;                        ┌───────┐   ┌───────┐
+&nbsp;                        │<span class="hljs-literal">Ingress</span>├───┤<span class="hljs-literal">Service</span>│
+&nbsp;                        │    <span class="hljs-literal">BBB</span>│   │    <span class="hljs-literal">BBB</span>│
+&nbsp;                        └───────┘   └───┬───┘
+&nbsp;    ┌──────────┐   ┌──────────┐   ┌─────┴────┐   ┌──────────┐
+&nbsp;    │<span class="hljs-string">Autoscaler</span>├───┤<span class="hljs-string">Deployment</span>├───┤<span class="hljs-literal">Deployment</span>├───┤<span class="hljs-literal">Autoscaler</span>│
+&nbsp;    │       <span class="hljs-string">AAA</span>│   │       <span class="hljs-string">AAA</span>│   │       <span class="hljs-literal">BBB</span>│   │       <span class="hljs-literal">BBB</span>│
+&nbsp;    └─────┬────┘   └─────┬────┘   └─────┬────┘   └──────────┘
+&nbsp;     ┌────┴───┐      ┌───│──────────┬───┴─┐
+&nbsp;     │<span class="hljs-string">External</span>│      │   ├───────┐  │     │
+&nbsp;     │  <span class="hljs-string">Metric</span>│      │   │       │  │     │
+&nbsp;     └────────┘    ┌─┴───┴───┐ ┌─┴──┴─┐ ┌─┴───────┐
+&nbsp;                   │<span class="hljs-section">ConfigMap</span>│ │<span class="hljs-section">Secret</span>│ │<span class="hljs-literal">ConfigMap</span>│
+&nbsp;                   │   <span class="hljs-section">Common</span>│ │<span class="hljs-section">Common</span>│ │      <span class="hljs-literal">BBB</span>│
+&nbsp;                   └─────────┘ └──────┘ └─────────┘
+					</code></pre></div>
+					<aside class="notes">
+						Когда мы говорим о самом приложении которое запущено в kubernetes кластере - это зачастую не один деплоймент, а несколько,
+						к которым подключаются разные конфиги, ингресс контроллеры,
+						и автоскейлеры нагрузки которые получают необходимую информацию как из метрик кластера и приложения, так и из метрик сторонних сервисов.
+						И вся эта связка также остается не протестированной.
+					</aside>
+				</section>
+
+				<section class="console-left flex-container-column" data-auto-animate>
+					<h4 data-id="console">~&nbsp;<span class="soft-red">infra-test</span>&nbsp;view real-world-helm</h4>
+					<div class="fragment console-output-left" data-fragment-index="1">не пытайтесь понять этот код</div>
+					<div class="fragment" data-fragment-index="1"><pre class="code-size"><code class="go" data-trim data-noescape>
+{{- define "rc.deployment.spec.replicas" -}}
+  {{- $instance := (required "A valid instance is required!" .Values.instance) | lower -}}
+  {{- if eq $instance "aaa-pro" -}}{{- $instance = "aaapro" -}}{{- end -}}
+  {{- $r := "" -}}
+  {{- $useDefault := false -}}
+  {{- $hasDefaultKey := false -}}
+  {{- if hasKey .Values.profiles $instance -}}
+    {{- if or (not (hasKey (get .Values.profiles $instance) "replicas")) (empty ( toString (get (get .Values.profiles $instance) "replicas"))) -}}
+      {{- $useDefault = true -}}
+    {{- end -}}
+  {{- else -}}
+    {{- $useDefault = true -}}
+  {{- end -}}
+  {{- if not (empty .Values.profiles.default) -}}
+    {{- if (hasKey .Values.profiles.default "replicas") -}}
+      {{- $hasDefaultKey = true -}}
+    {{- end -}}
+  {{- end -}}
+  {{- if and $useDefault $hasDefaultKey -}}
+    {{- $r = .Values.profiles.default.replicas | toString | atoi -}}
+  {{- else if and (not $useDefault) (hasKey .Values.profiles $instance) -}}
+    {{- $r = (get (get .Values.profiles $instance) "replicas") | toString | atoi -}}
+  {{- else -}}
+      {{- fail (printf "profiles.%s.replicas or profiles.default.replicas required" $instance) -}}
+  {{- end -}}
+  replicas: {{ $r }}
+{{- end -}}
+					</code></pre></div>
+					<aside class="notes">
+						А с хельмом в реальном мире все еще хуже.
+						Пожалуйста не пытайтесь понять этот код.
+						Просто поверьте он делает примерно тоже самое что и функция для расчета количества реплик из нашего примера,
+						но при этом в нем множество условной логики,
+						так как это библиотечный компонент и должен покрывать большое разнообразие корнер кейсов.
+					</aside>
+				</section>
+
+				<section class="console-left flex-container-column" data-auto-animate>
+					<h4 data-id="console">~&nbsp;<span class="soft-red">infra-test</span>&nbsp;solve&nbsp;<span class="underline">problem</span></h4>
+					<div class="console-output-left"><span class="fragment">интеграционные тесты</span></div>
+					<div class="console-output-left"><span class="fragment">надо запускать параллельно</span></div>
+					<aside class="notes">
+						Для того чтобы тестировать такие сложные кейсы нам не обойтись без интеграционных тестов.
+						Но когда мы создаем такое большое количество объектов в одном тесте он потребует гораздо больше времени на выполнение.
+					</aside>
+				</section>
+
+				<section class="console-left flex-container-column" data-auto-animate>
+					<h4 data-id="console">~&nbsp;<span class="soft-red">infra-test</span>&nbsp;view examples</h4>
+					<div><pre class="code-size"><code class="golang" data-trim data-noescape>
+func TestTerraformHelloWorldOne(t *testing.T) {
+  t.<span class="hljs-section">Parallel</span>()
+  // test code
+}
+func TestTerraformHelloWorldTwo(t *testing.T) {
+  t.<span class="hljs-section">Parallel</span>()
+  // test code
+}
+					</code></pre></div>
+					<aside class="notes">
+						Здесь нам на помощь приходит тестовый фреймфорк от самого go и позволяет запускать эти тесты параллельно.
+					</aside>
+				</section>
+
+				<section class="console-left flex-container-column" data-auto-animate>
+					<h4 data-id="console">~&nbsp;<span class="soft-red">infra-test</span>&nbsp;solve&nbsp;<span class="underline">problem</span></h4>
+					<div class="console-output-left"><span>интеграционные тесты</span></div>
+					<div class="console-output-left"><span>надо запускать параллельно</span></div>
+					<div class="console-output-left"><span class="fragment">с продуманными именами ресурсов</span></div>
+					<aside class="notes">
+						Но такой запуск приводит к другой проблеме - конфликту ресурсов и имен.
+						Поэтому хардкодить имена ресурсов и референсы в инфаструктурном коде никогда не является хорошей идей.
+					</aside>
+				</section>
+
+				<section class="console-left flex-container-column" data-auto-animate>
+					<h4 data-id="console">~&nbsp;<span class="soft-red">infra-test</span>&nbsp;view integration_test</h4>
+					<div><pre class="code-size"><code class="ruby" data-trim data-noescape>
+<span class="hljs-keyword" >resource</span> "aws_iam_role" "lambda_exec" {
+  <span class="hljs-keyword">name</span> = <span class="hljs-section">var</span>.name
+  # ...
+}
+					</code></pre></div>
+					<div><pre class="code-size"><code class="yaml" data-trim data-noescape>
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.name }}
+# ...
+					</code></pre></div>
+					<aside class="notes">
+						Лучше использовать переменные в качестве имен, чтобы иметь возможноть их оверрайдить из конфигурационных файлов.
+					</aside>
+				</section>
+
+				<section class="console-left flex-container-column" data-auto-animate>
+					<h4 data-id="console">~&nbsp;<span class="soft-red">infra-test</span>&nbsp;solve&nbsp;<span class="underline">problem</span></h4>
+					<div class="console-output-left"><span>интеграционные тесты</span></div>
+					<div class="console-output-left"><span>надо запускать параллельно</span></div>
+					<div class="console-output-left"><span>с продуманными именами ресурсов</span></div>
+					<div class="console-output-left"><span class="fragment">разделяя на независимые стэйджи</span></div>
+					<aside class="notes">
+						Когда тестов становится много выделяются отдельные блоки которые отвечают за подготовку окружения и его удаление,
+						их можно выделить в отдельные стейджи и фикстуры а встроенные средства terratest позволяют это сделать.
+					</aside>
+				</section>
+
+				<section class="console-left flex-container-column" data-auto-animate>
+					<h4 data-id="console">~&nbsp;<span class="soft-red">infra-test</span>&nbsp;view integration_test</h4>
+					<div><pre class="code-size"><code class="golang" data-trim data-noescape data-line-numbers="1-9|1|4,7|3,6|9">
+stage := test_structure.<span class="hljs-section">RunTestStage</span>
+
+defer stage(t, "cleanup_terraform" , cleanupTerraform)
+stage(t, "deploy_terraform", deployTerraform)
+
+defer stage(t, "cleanup_k8s_app", cleanupK8sApp)
+stage(t, "deploy_k8s_app", deployK8sApp)
+
+stage(t, "validate", validate)
+					</code></pre></div>
+					<aside class="notes">
+					</aside>
+				</section>
+
+				<section class="console-left flex-container-column" data-auto-animate>
+					<h4 data-id="console">~&nbsp;<span class="soft-red">infra-test</span>&nbsp;view integration_test</h4>
+					<div><pre class="code-size"><code class="console" data-trim data-noescape data-line-numbers="1-2|4|5-7|8-9">
+$ SKIP_cleanup_terraform=true
+$ SKIP_cleanup_k8s_app=true
+
+$ <span class="hljs-keyword">go</span> test
+Running stage 'deploy_terraform'…
+Running stage 'deploy_k8s_app'…
+Running stage 'validate'…
+Skipping stage 'cleanup_k8s_app'…
+Skipping stage 'cleanup_terraform'…
+					</code></pre></div>
+					<aside class="notes">
+					</aside>
+				</section>
+
+				<section class="console-left flex-container-column" data-auto-animate>
+					<h4 data-id="console">~&nbsp;<span class="soft-red">infra-test</span>&nbsp;solve&nbsp;<span class="underline">problem</span></h4>
+					<div class="console-output-left"><span>интеграционные тесты</span></div>
+					<div class="console-output-left"><span>надо запускать параллельно</span></div>
+					<div class="console-output-left"><span>с продуманными именами ресурсов</span></div>
+					<div class="console-output-left"><span>разделяя на независимые стэйджи</span></div>
+					<div class="console-output-left"><span class="fragment">и с автоматическим ретраем</span></div>
+					<aside class="notes">
+						И последнее требование, которое предъявляется к интеграционным тестам, это возможность ретрая тестов при известных ошибках.
+						Которые существуют вследствие причин никак от нас независящих.
+					</aside>
+				</section>
+
+				<section class="console-left flex-container-column" data-auto-animate>
+					<h4 data-id="console">~&nbsp;<span class="soft-red">infra-test</span>&nbsp;view hello_terraform_test.go</h4>
+					<div><pre class="code-size"><code class="golang" data-trim data-noescape data-line-numbers="1-10|5-7">
+func TestTerraformHelloWorld(t *testing.T) {
+  options := &terraform.Options{
+		TerraformDir:    "examples/hello-terraform",
+		MaxRetries:      3,
+		RetryableTerraformErrors: map[string]string{
+			"regexp to match against the error": "42",
+		},
+	})
+  // ...
+}
+					</code></pre></div>
+					<aside class="notes">
+					</aside>
+				</section>
+
+				<section class="console-left flex-container-column" data-auto-animate>
+					<h4 data-id="console">~&nbsp;<span class="soft-red">infra-test</span>&nbsp;use-cases&nbsp;<span class="spearmint">"terratest"</span></h4>
+					<div class="console-output-left"><span class="fragment">тестирование инфраструктурного кода</span></div>
+					<div class="console-output-left"><span class="fragment">post-deployment верификация</span></div>
+					<div class="console-output-left"><span class="fragment">тестирование CI/CD пайплайнов</span></div>
+					<div class="console-output-left"><span class="fragment">разработка SaaS и PaaS</span></div>
+					<div class="console-output-left"><span class="fragment">обновление версий</span></div>
+					<aside class="notes">
+						И так мы с вами разобрались с основными возможностями которые предоставляет terrаtest.
+						Очевидно что его можно использовать для тестирования в рамках обычного цикла разработки как для инфраструктурного так и конфигурационного тестирования.
+						Также он может быть вам полезен если вы выстраивать процесс пост-деплоймент верификации, когда требуются не просто функциональные тесты но и проверка инфраструктурной части.
+						Еще одна область применения это тестирование CI/CD пайплайнов, в обычной жизни это не так очевидно, но когда вы занимаетесь разработкой
+						внутреннего SaaS или PaaS решения вам необходимо зачастую проводить различные проверки своей инфраструктуры и регулярно верифицировать ее.
+						Последний но не менее важный кейс это проверка работы ваших инструментов и инфраструктуры при обновлении версий
+						- будет ли все работать с новой версией терраформа, запустится ли ваш ресурс в новой версии кубернетис кластера - ваши тесты смогут дать на это ответ.
+					</aside>
+				</section>
+
+				<section class="console-left flex-container-column" data-auto-animate>
+					<h4 data-id="console">~&nbsp;<span class="soft-red">infra-test</span>&nbsp;answer&nbsp;<span class="spearmint">"почему я?"</span></h4>
+					<aside class="notes">
+						Возвращаясь к вопросу который я озвучил в начале презентации - зачем мне как тестировщику это надо? почему я должен этим заниматься?
+						- хочу добавить следующее -
+						Озадачившись года 4 назад проблемами перевода приложений с виртуальных машин в кубернетес, а чуть позднее выстраиванием процессов непрерывной поставки и деплоймента
+						я увидел, что в этой области, в плане тестирование, был настоящий дикий запад.
+						За эти несколько лет объемы автоматизации возросли, а с тестированием мало что изменилось,
+						но теперь у вас хотя бы есть подходящие инструменты и когда ваш следующий проект потребует от вас
+						тестирования не только функциональности приложения,
+						но и его взаимодействия с инфраструктурой, конфигурационного тестирования, верификации процесса деплоймента - то вы сможете решить эту задачу.
+					</aside>
+				</section>
+
+				<section class="console-left flex-container-column" data-auto-animate>
+					<h3 data-id="console">Вопросы</h3>
+					<aside class="notes">
+						На этом у меня все. Большое спасибо за ваше внимание.
+					</aside>
+				</section>
+
+			</div>
+		</div>
+
+		<script src="dist/reveal.js"></script>
+		<script src="plugin/notes/notes.js"></script>
+		<script src="plugin/markdown/markdown.js"></script>
+		<script src="plugin/highlight/highlight.js"></script>
+		<script>
+			// More info about initialization & config:
+			// - https://revealjs.com/initialization/
+			// - https://revealjs.com/config/
+			Reveal.initialize({
+				hash: true,
+				display: 'flex',
+				center: 'center',
+				pdfSeparateFragments: false,
+				pdfMaxPagesPerSlide: 1,
+
+				// Learn about plugins: https://revealjs.com/plugins/
+				plugins: [ RevealMarkdown, RevealHighlight, RevealNotes ]
+			});
+		</script>
+	</body>
+</html>
