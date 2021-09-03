@@ -1,0 +1,10 @@
+@font-face {
+    font-family: 'Noir Pro Medium';
+    src: url('./NoirPro-Medium.eot');
+    src: url('./NoirPro-Medium.eot?#iefix') format('embedded-opentype'),
+         url('./NoirPro-Medium.woff') format('woff'),
+         url('./NoirPro-Medium.otf') format('onetype');
+
+    font-weight: normal;
+    font-style: normal;
+}
