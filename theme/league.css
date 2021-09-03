@@ -24,7 +24,6 @@ section.has-light-background, section.has-light-background h1, section.has-light
   --r-heading-color: #F2F2F2;
   --r-heading-line-height: 1.2;
   --r-heading-letter-spacing: normal;
-  --r-heading-text-transform: uppercase;
   --r-heading-text-shadow: 0px 0px 6px rgba(0, 0, 0, 0.2);
   --r-heading-font-weight: normal;
   --r-heading1-text-shadow: 0 1px 0 #ccc, 0 2px 0 #c9c9c9, 0 3px 0 #bbb, 0 4px 0 #b9b9b9, 0 5px 0 #aaa, 0 6px 1px rgba(0, 0, 0, 0.1), 0 0 5px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.3), 0 3px 5px rgba(0, 0, 0, 0.2), 0 5px 10px rgba(0, 0, 0, 0.25), 0 20px 20px rgba(0, 0, 0, 0.15);
@@ -82,7 +81,6 @@ section.has-light-background, section.has-light-background h1, section.has-light
 .reveal h1,
 .reveal h2,
 .reveal h3,
-.reveal h4,
 .reveal h5,
 .reveal h6 {
   margin: var(--r-heading-margin);
@@ -91,6 +89,7 @@ section.has-light-background, section.has-light-background h1, section.has-light
   font-weight: var(--r-heading-font-weight);
   line-height: var(--r-heading-line-height);
   letter-spacing: var(--r-heading-letter-spacing);
+  text-transform: var(--r-heading-text-transform);
   text-shadow: var(--r-heading-text-shadow);
   word-wrap: break-word;
 }
@@ -367,18 +366,13 @@ section.has-light-background, section.has-light-background h1, section.has-light
  *********************************************/
 .console-left {
   text-align: left;
-  padding-left:8%;
-  padding-bottom:12%;
+  padding-left: 8%;
+  padding-bottom: 12%;
 }
 
 .console-output-left {
   text-align: left;
-  padding-left:10%;
-}
-
-.console-output-right {
-  text-align: left;
-  padding-right:10%;
+  padding-left: 10%;
 }
 
 .flex-container-column {
@@ -386,12 +380,17 @@ section.has-light-background, section.has-light-background h1, section.has-light
   flex-direction: column;
 }
 
-.hard-red {
-  color: #E95678;
+.flex-container-column {
+  display: flex;
+  flex-direction: column;
 }
 
 .soft-red {
   color: #FFA4A0;
+}
+
+.hard-red {
+  color: #E95678;
 }
 
 .spearmint {
@@ -400,4 +399,8 @@ section.has-light-background, section.has-light-background h1, section.has-light
 
 .underline {
   text-decoration: underline;
+}
+
+.code-size {
+  font-size: 24px;
 }
