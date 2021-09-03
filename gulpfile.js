@@ -14,8 +14,7 @@ const resolve = require('@rollup/plugin-node-resolve').default
 const sass = require('sass')
 
 const gulp = require('gulp')
-const ghPages = require('gulp-gh-pages')
-const tap = require('gulp-tap')
+const del = require('del')
 const zip = require('gulp-zip')
 const header = require('gulp-header')
 const eslint = require('gulp-eslint')
@@ -314,5 +313,16 @@ gulp.task('serve', () => {
 
 })
 
-//TODO
-gulp.task('deploy', () => gulp.src('*.html','./dist/**/*').pipe(ghPages()));
+gulp.task('clean-gh-page', () => del(['./gh-page']))
+
+gulp.task('prepare-gh-page', gulp.series('clean-gh-page', () =>
+        gulp.src([
+            'index.html',
+            '.nojekyll',
+            'dist/**/*',
+            'img/**/*',
+            'js/**/*',
+            'plugin/**/*',
+            'node_modules/@fortawesome/**/*',
+        ], {base:"."}).pipe(gulp.dest('./gh-page'))
+))
