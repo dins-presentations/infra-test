@@ -142,6 +142,7 @@
 						Helm, чтобы описывать шаблоны ресурсов для Kubernetes.
 						AWS, чтобы создавать необходимые ресурсы в облаке.
 						И terraform, чтобы описывать эти ресурсы.
+						<br><br>
 						Проблему тестирования подобного зоопарка
 					</aside>
 				</section>
@@ -240,7 +241,7 @@ $ <span class="hljs-keyword">kubectl</span> apply -f FILENAME --server-dry-run
 					<div class="fragment console-output-left" style="display: flex; align-items: flex-end"><a href="https://github.com/gruntwork-io/terratest" target="_blank" rel="noopener noreferrer">gruntwork-io/terratest</a>&nbsp;на&nbsp;<i class="fab fa-github"></i><span>&nbsp;c 2018 года</span></div>
 					<div class="fragment console-output-left">а еще нужно будет изучить Go</div>
 					<aside class="notes">
-						В публичном доступе terratest существует с 2018 года и достаточно активно поддерживается и новый релиз появляется примерно каждую неделю.
+						В публичном доступе terratest существует с 2018 года и достаточно активно поддерживается а новые релиз появляется примерно каждую неделю.
 						Единственный нюанс который, как мне кажется, может вызвать сомнения, это то, что надо будет писать тесты на go.
 					</aside>
 				</section>
@@ -281,7 +282,6 @@ $ <span class="hljs-keyword">kubectl</span> apply -f FILENAME --server-dry-run
 						</div>
 					</div>
 					<aside class="notes">
-						Я даже специально подготовил для вас сравнительную табличку.
 						Например, в Java есть класс, объекты и методы, а в go вместо этого структуры и функции.
 						В Java есть dependncy ingjection и в go его тоже можно затащить, но мы точно не будем это делать для тестов.
 						В Java есть дженерики а в го их нет.
@@ -297,7 +297,7 @@ $ <span class="hljs-keyword">kubectl</span> apply -f FILENAME --server-dry-run
 
 				<section class="console-left flex-container-column" data-auto-animate>
 					<h4 data-id="console">~&nbsp;<span class="soft-red">infra-test</span>&nbsp;test terraform</h4>
-					<div class="fragment " ><pre class="code-size"><code class="console" data-trim data-noescape>
+					<div><pre class="code-size"><code class="console" data-trim data-noescape>
 infra-test-example
 └ examples
   └ hello-terraform
@@ -314,7 +314,7 @@ infra-test-example
 
 				<section class="console-left flex-container-column" data-auto-animate>
 					<h4 data-id="console">~&nbsp;<span class="soft-red">infra-test</span>&nbsp;view main.tf</h4>
-					<div class="fragment " ><pre class="code-size"><code class="ruby" data-trim data-noescape>
+					<div><pre class="code-size"><code class="ruby" data-trim data-noescape>
 <span class="hljs-keyword" >resource</span> "aws_lambda_function" "hello_world" {
   <span class="hljs-keyword" >function_name</span> = "HelloWorld"
   <span class="hljs-keyword" >role</span> = aws_iam_role.lambda_exec.arn
@@ -332,7 +332,7 @@ infra-test-example
 
 				<section class="console-left flex-container-column" data-auto-animate>
 					<h4 data-id="console">~&nbsp;<span class="soft-red">infra-test</span>&nbsp;test terraform</h4>
-					<div class="fragment " ><pre class="code-size"><code class="console" data-trim data-noescape>
+					<div><pre class="code-size"><code class="console" data-trim data-noescape>
 $ <span class="hljs-keyword">cd</span> examples/hello-terraform
 $ <span class="hljs-keyword">terraform</span> apply
 <span class="hljs-string">Outputs:</span>
@@ -347,7 +347,7 @@ $ <span class="hljs-keyword">curl</span> abcdefghij.execute-api.us-east-1.amazon
 
 				<section class="console-left flex-container-column" data-auto-animate>
 					<h4 data-id="console">~&nbsp;<span class="soft-red">infra-test</span>&nbsp;view hello_terraform_test.go</h4>
-					<div class="fragment " ><pre class="code-size"><code class="golang" data-trim data-noescape data-line-numbers="1-8|2-4|6|7|5">
+					<div><pre class="code-size"><code class="golang" data-trim data-noescape data-line-numbers="1-8|2-4|6|7|5">
 func TestTerraformHelloWorld(t *testing.T) {
   terraformOptions := &terraform.Options{
     TerraformDir: "examples/hello-terraform",
@@ -363,7 +363,7 @@ func TestTerraformHelloWorld(t *testing.T) {
 
 				<section class="console-left flex-container-column" data-auto-animate>
 					<h4 data-id="console">~&nbsp;<span class="soft-red">infra-test</span>&nbsp;view hello_terraform_test.go</h4>
-					<div class="fragment " ><pre class="code-size"><code class="golang" data-trim data-noescape data-line-numbers="1-12|2|3-6|7-8|9-10">
+					<div><pre class="code-size"><code class="golang" data-trim data-noescape data-line-numbers="1-12|2|3-6|7-8|9-10">
 func validate(t *testing.T, opts *terraform.Options) {
   url := terraform.<span class="hljs-section">Output</span>(t, opts, "url")
   http_helper.<span class="hljs-section">HttpGetWithRetry</span>(
@@ -383,7 +383,7 @@ func validate(t *testing.T, opts *terraform.Options) {
 
 				<section class="console-left flex-container-column" data-auto-animate>
 					<h4 data-id="console">~&nbsp;<span class="soft-red">infra-test</span>&nbsp;test kubernetes</h4>
-					<div class="fragment " ><pre class="code-size"><code class="console" data-trim data-noescape>
+					<div><pre class="code-size"><code class="console" data-trim data-noescape>
 infra-test-example
 └ examples
   ...
@@ -403,7 +403,7 @@ infra-test-example
 
 				<section class="console-left flex-container-column" data-auto-animate>
 					<h4 data-id="console">~&nbsp;<span class="soft-red">infra-test</span>&nbsp;view Dockerfile</h4>
-					<div class="fragment " ><pre class="code-size"><code class="dockerfile" data-trim data-noescape>
+					<div><pre class="code-size"><code class="dockerfile" data-trim data-noescape>
 FROM ubuntu:21.04
 EXPOSE 8080
 ARG DEBIAN_FRONTEND=noninteractive
@@ -417,7 +417,7 @@ CMD ["busybox", "httpd", "-f", "-p", "8080"]
 
 				<section class="console-left flex-container-column" data-auto-animate>
 					<h4 data-id="console">~&nbsp;<span class="soft-red">infra-test</span>&nbsp;view deployment.yaml</h4>
-					<div class="fragment " ><pre class="code-size"><code class="yaml" data-trim data-noescape>
+					<div><pre class="code-size"><code class="yaml" data-trim data-noescape>
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -440,7 +440,7 @@ kind: Service # ...
 
 				<section class="console-left flex-container-column" data-auto-animate>
 					<h4 data-id="console">~&nbsp;<span class="soft-red">infra-test</span>&nbsp;describe deployment</h4>
-					<div class="fragment " ><pre class="code-size"><code class="console" data-trim data-noescape>
+					<div><pre class="code-size"><code class="console" data-trim data-noescape>
 
 &nbsp;        ┌───────────────────────────┐
 &nbsp;        │         <span class="hljs-string">Deployment</span>        │
@@ -464,7 +464,7 @@ kind: Service # ...
 
 				<section class="console-left flex-container-column" data-auto-animate>
 					<h4 data-id="console">~&nbsp;<span class="soft-red">infra-test</span>&nbsp;test kubernetes</h4>
-					<div class="fragment " ><pre class="code-size"><code class="console" data-trim data-noescape>
+					<div><pre class="code-size"><code class="console" data-trim data-noescape>
 $ <span class="hljs-keyword">cd</span> examples/hello-k8s
 $ <span class="hljs-keyword">docker</span> build -t infra-test/hello-world:latest .
 <span class="hljs-string">Successfully tagged infra-test/hello-world:latest</span>
@@ -482,7 +482,7 @@ $ <span class="hljs-keyword">curl</span> localhost:8080
 
 				<section class="console-left flex-container-column" data-auto-animate>
 					<h4 data-id="console">~&nbsp;<span class="soft-red">infra-test</span>&nbsp;view hello_k8s_test.go</h4>
-					<div class="fragment " ><pre class="code-size"><code class="golang" data-trim data-noescape data-line-numbers="1-10|2">
+					<div><pre class="code-size"><code class="golang" data-trim data-noescape data-line-numbers="1-10|2">
 func TestKubernetesHelloWorld(t *testing.T) {
   <span class="hljs-section">buildDockerImage(t)</span>
 
@@ -533,7 +533,7 @@ func TestKubernetesHelloWorld(t *testing.T) {
 
 				<section class="console-left flex-container-column" data-auto-animate>
 					<h4 data-id="console">~&nbsp;<span class="soft-red">infra-test</span>&nbsp;view hello_k8s_test.go</h4>
-					<div class="fragment " ><pre class="code-size"><code class="golang" data-trim data-noescape data-line-numbers="1-12|2-3|5-8">
+					<div><pre class="code-size"><code class="golang" data-trim data-noescape data-line-numbers="1-12|2-3|5-8">
 func validate(t *testing.T, opts *k8s.KubectlOptions) {
   k8s.<span class="hljs-section">WaitUntilServiceAvailable</span>(t,
     opts, "hello-world", 10, 1*time.Second)
@@ -592,7 +592,7 @@ func validate(t *testing.T, opts *k8s.KubectlOptions) {
 
 				<section class="console-left flex-container-column" data-auto-animate>
 					<h4 data-id="console">~&nbsp;<span class="soft-red">infra-test</span>&nbsp;test helm</h4>
-					<div class="fragment " ><pre class="code-size"><code class="console" data-trim data-noescape>
+					<div><pre class="code-size"><code class="console" data-trim data-noescape>
 infra-test-example
 └ examples
   ...
@@ -614,7 +614,7 @@ infra-test-example
 
 				<section class="console-left flex-container-column" data-auto-animate>
 					<h4 data-id="console">~&nbsp;<span class="soft-red">infra-test</span>&nbsp;view Chart.yaml</h4>
-					<div class="fragment " ><pre class="code-size"><code class="yaml" data-trim data-noescape>
+					<div><pre class="code-size"><code class="yaml" data-trim data-noescape>
 apiVersion: v1
 name: hello_helm
 description: A minimal Helm chart
@@ -626,7 +626,7 @@ version: 0.0.1
 
 				<section class="console-left flex-container-column" data-auto-animate>
 					<h4 data-id="console">~&nbsp;<span class="soft-red">infra-test</span>&nbsp;view values.yaml</h4>
-					<div class="fragment " ><pre class="code-size"><code class="yaml" data-trim data-noescape>
+					<div><pre class="code-size"><code class="yaml" data-trim data-noescape>
 stage: pro
 version: latest
 					</code></pre></div>
@@ -636,7 +636,7 @@ version: latest
 
 				<section class="console-left flex-container-column" data-auto-animate>
 					<h4 data-id="console">~&nbsp;<span class="soft-red">infra-test</span>&nbsp;view _helpers.tpl</h4>
-					<div class="fragment " ><pre class="code-size"><code class="go" data-trim data-noescape data-line-numbers="1-10|1|2|3-4|5-6|7-8">
+					<div><pre class="code-size"><code class="go" data-trim data-noescape data-line-numbers="1-10|1|2|3-4|5-6|7-8">
 {{- define "rc.replicas" -}}
   {{- $stage := .Values.stage | lower -}}
   {{- if (eq $stage "pro") -}}
@@ -654,7 +654,7 @@ version: latest
 
 				<section class="console-left flex-container-column" data-auto-animate>
 					<h4 data-id="console">~&nbsp;<span class="soft-red">infra-test</span>&nbsp;view deployment.yaml</h4>
-					<div class="fragment " ><pre class="code-size"><code class="yaml" data-trim data-noescape data-line-numbers="1-12|5|12">
+					<div><pre class="code-size"><code class="yaml" data-trim data-noescape data-line-numbers="1-12|5|12">
 apiVersion: apps/v1
 kind: Deployment
 # ...
@@ -674,7 +674,7 @@ spec:
 
 				<section class="console-left flex-container-column" data-auto-animate>
 					<h4 data-id="console">~&nbsp;<span class="soft-red">infra-test</span>&nbsp;view hello_helm_test.go</h4>
-					<div class="fragment " ><pre class="code-size"><code class="golang" data-trim data-noescape data-line-numbers="1-22|2-8|4-5|10-14|16-17|19-22">
+					<div><pre class="code-size"><code class="golang" data-trim data-noescape data-line-numbers="1-22|2-8|4-5|10-14|16-17|19-22">
 func TestHelmHelloWorld(t *testing.T) {
   options := &helm.<span class="hljs-section">Options</span>{
   	SetValues: map[string]string{
@@ -723,7 +723,7 @@ func TestHelmHelloWorld(t *testing.T) {
 
 				<section class="console-left flex-container-column" data-auto-animate>
 					<h4 data-id="console">~&nbsp;<span class="soft-red">infra-test</span>&nbsp;view real-world-terraform</h4>
-					<div class="fragment " ><pre class="code-size"><code class="console" data-trim data-noescape>
+					<div><pre class="code-size"><code class="console" data-trim data-noescape>
 &nbsp;                                   ┌───┐
 &nbsp;                                   │<span class="hljs-keyword">AWS</span>│
 &nbsp;                                   ├───┼─────────────┐
@@ -822,6 +822,8 @@ func TestHelmHelloWorld(t *testing.T) {
 					<aside class="notes">
 						Для того чтобы тестировать такие сложные кейсы нам не обойтись без интеграционных тестов.
 						Но когда мы создаем такое большое количество объектов в одном тесте он потребует гораздо больше времени на выполнение.
+
+						Здесь нам на помощь...
 					</aside>
 				</section>
 
